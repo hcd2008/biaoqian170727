@@ -1,0 +1,49 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title">
+  <h2>标签存档</h2></div>
+  
+<div class="wdxmbox">
+<div class="table-operate ue-clear">
+  <a class="jin" id="state_1" href="?state=1">未存档</a>
+  <a class="check" id="state_3" href="?state=3">已存档</a>
+</div>
+</div>
+<div class="lieb_box">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="wdwmbg" style="border:0px;">
+    <tr bgcolor="#fff">
+      <th>项目名称</th>
+      {if $state ==3}
+      <th>标签名称</th>
+      <th>版本号</th>
+      <th>版本名称</th>
+      <th>存档时间</th>
+      {else}
+      <th>版本</th>
+      <th>完成时间</th>
+      <th>操作</th>
+      {/if}
+      
+    </tr>
+    {foreach $project_list as $t}
+    <tr bgcolor="#fff">
+    	<td align="center">{$t['title']}</td>
+        {if $state ==3}
+        <td align="center">{$t['arc_title']}</td>
+        <td align="center">V{$t['version']}</td>
+        <td align="center">{$t['arc_version']}</td>
+        <td align="center">{$t['arc_addtime']|timetodate}</td>
+        {else}
+        <td align="center">V{$t['version']}</td>
+        <td align="center">{$t['finishitime']|timetodate}</td>
+        <td align="center"><a href="{:url('member/archive/step1')}?id={$t['id']}">存档</a></td>
+        {/if}
+    </tr>
+    {/foreach}
+    </table>
+    <div class="pages"> </div>
+  </div>
+<script type="text/javascript">
+$('.office').addClass('curli');
+$('#state_{$state}').addClass('dqxm');
+</script>

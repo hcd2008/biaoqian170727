@@ -1,0 +1,69 @@
+{layout name="layout" /}
+
+<style type="text/css">
+.sys_upload{padding: 10px;}
+.sys_upload ul li{padding: 10px;}
+.sys_upload ul li .sys_btn{padding: 2px;width: 70px;}
+</style>
+<div id="right">  <link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title" style="border-bottom:0px;">
+  <h2>修改标签</h2>
+</div>
+
+<form id="form1" name="form1" method="post" action="{:url('member/Jiancha/edit')}">
+<input hidden="hidden" type="hidden" name="id" id="id" value="{$id}" />
+<table  width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+  <tbody  id="e">
+  <tr id="option0">
+    <td colspan="2" class="cj_dbt">修改标签</td>
+  </tr>
+ 
+  <tr  bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>所属产品</th>
+    <td align="left">
+      {$proname}
+    </td>
+  </tr>
+   <tr  bgcolor="#ffffff">
+          <th width="20%">部门的标签评审人员</th>
+          <td>
+        {foreach $member_list as $k=>$t}
+              <label><input type="checkbox" name="biaoqian_users[]" {if in_array($t.userid,$fpuser)}checked="checked"
+              {/if} value="{$t.userid}" />
+              {$t.realname}&nbsp;&nbsp;</label>
+          {/foreach}
+            </td>
+    </tr>
+     {foreach $jc_list as $k1=>$t1}
+   <tr bgcolor="#ffffff">
+    <th width="20%">检查项</th>
+    <td>
+          <label><input type="text" readonly="true" name="jianchaxiang[]" id="jianchaxiang[]" value="{$t1.jcxiang}" />
+          </label>
+      </td>
+  </tr>
+   {/foreach}
+   
+  </tbody>
+  
+  </table>
+  
+<script type="text/javascript">
+
+var rowCount=1;  //行数默认4行  
+  
+//添加行  
+function addRow(){  
+    rowCount++;  
+    var newRow='<tr bgcolor="#ffffff" id="option'+rowCount+'"><th width="20%">检查项</th><td id="qq" align="left"><input type="text" name="jianchaxiang[]" id="jpost[jianchaxiang][]"><a href="#" onclick=delRow('+rowCount+')>删除</a></td></tr>';  
+    $('#e').append(newRow);  
+}  
+   
+ function delRow(rowIndex){  
+    $("#option"+rowIndex).remove();  
+    rowCount--;  
+}  
+
+</script>
+</form>
+</div>

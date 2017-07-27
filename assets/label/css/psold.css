@@ -1,0 +1,84 @@
+
+
+
+body {
+    margin: 0;
+    padding: 0;
+}
+#ps {
+    padding-top: 120px;
+    padding-left: 20px;
+    position: relative;
+}
+
+#ps .tool {
+    height: 57px;
+    line-height: 57px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 9;
+    background: #535353;
+}
+
+#ps .tool > div {
+    font-size: 16px;
+    padding-left:10px;
+    padding-right: 10px;
+    float: left;
+    cursor: pointer;
+    line-height: 50px;
+    vertical-align: middle;
+}
+#ps .tool > div img{
+    padding-top: 12.5px;
+    /*border:1px solid red;*/
+
+}
+
+#ps input,#ps select {
+    width: 50px;
+    height: 20px;
+}
+
+#ps .board {
+    position: relative;
+    transform: scale(1);
+    cursor: default;
+}
+
+#ps .board canvas {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#canvasfon {
+    z-index: 1;
+}
+
+#canvasrule {
+    z-index: 2;
+}
+
+#canvascur {
+    z-index: 3;
+}
+
+#clipBtn {
+    display: none;
+}
+#cuxi,#xingzhuang,#xiantiaose,#biaozhuse,#wenzise,#zihao{ border:1px solid #39b54a;}
+#xiantiaose,#biaozhuse,#wenzise{ background:#f9f9f9;}
+.sylbg{
+    font-size: 13px;
+}
+.sylbg td{
+    padding:5px;
+}
+.dangqian{
+  background: #ccc;
+}

@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+	<head>
+    <meta charset="UTF-8">
+		<title>标签比对</title>
+		<link href="__ASSETS__/label/css/canvas.css" type="text/css" rel="stylesheet" />
+		<link href="__ASSETS__/label/css/pageruler.css" type="text/css" rel="stylesheet" />
+		<link href="__ASSETS__/label/css/slider.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="__ASSETS__/label/js/jquery.min.js"></script>
+		<script type="text/javascript" src="__ASSETS__/label/js/jquery.js"></script>
+		<script type="text/javascript" src="__ASSETS__/label/js/resemble.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$("#zxbd").click();
+		$(".bdgn").click(function(event){
+		$(".bdgnb").toggle();
+		});
+		$("#rongqi").click(function (event) { $('.bdgnb').slideUp('normal') });  
+
+		});
+		</script>
+		
+		<style>
+			.red_border{
+				border-color:red;
+			}
+		</style>
+	</head>
+	<body onselectstart="return false">
+		<div id="content" unselectable="on" onselectstart="return false;" style="-moz-user-select:none;">
+		  <div id="toolbox" style="z-index:102;position: fixed;top:0px;left:0px;">
+				<ul>
+				<li id="xzan">
+				{if $vnum>1}
+					<button type="button" class="bdgn">选择版本</button>
+                    <div class="bdgnb" style="display:none">
+					<form id="form1" name="form1" action="?file=compare" method="post" onSubmit="return check_bd();">
+ <input type="hidden" name="file" id="file" value="compare" />
+<input type="hidden" name="xmid" id="xmid" value="{$xmid}" />
+
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+{loop $bb $b}
+  <tr bgcolor="#ffffff">
+    <td><input name="lv[]" id="lv" type="checkbox" value="{$b[lid]}">&nbsp;V{$b['version']}</td>
+  </tr>
+ {/loop}
+   <tr bgcolor="#ffffff">
+    <td><input type="submit" name="submit" value="提交" /></td>
+  </tr>
+</table>
+</form>
+<script language="javascript">
+function check_bd(){
+	if($("input[name='lv[]']:checked").length !=2){
+		alert("{$L['xz_label_bd']}");
+		return false;
+	}
+}
+</script>
+</div>
+{/if}
+项目：{$v1[title]}&nbsp;<b>V{$v1[version]}</b> vs <b>V{$v2[version]}</b><button type="button" id="zxbd" class="back" onclick="runprocess()">执行比对</button>&nbsp;
+<button type="button" class="back" style="margin:0px 6px 0px 0px;" onClick="javascript:history.back(-1);">返回</button>
+ </li>
+
+
+				</ul>
+			</div>		
+	<!-- <div>
+<p><span style="font-size:16px;font-weight:bold">V{$v1[version]}标签11</span><br/>
+<img id = "img" title = "Before"/>
+</p>
+<p><span style="font-size:16px;font-weight:bold">V{$v2[version]}标签222</span><br/>
+<img id = "img2" title = "Before2"/>
+</p>
+<p><span style="font-size:16px;font-weight:bold">图像比对</span><br/>
+<canvas id="demo" title = "After"></canvas>
+</p>	</div>	 -->
+<div id="tab" style="margin-left:20px;margin-top:40px">
+  <!-- <div class="tabList">
+	<ul>
+		<li class="cur">V{$v1[version]}</li>
+		<li>V{$v2[version]}</li>
+		<li>比对结果</li>
+	</ul>
+  </div> -->
+  <div class="tabCon">
+  	<div>
+		<h3 style='height:40px;line-height:40px;text-align:center; background:#ccc;margin:0;padding:0'>比对结果</h3><br>
+		<canvas id="demo" title = "After"></canvas><br/>
+	</div>
+	<div >
+		<h3 style='height:40px;line-height:40px;text-align:center; background:#ccc;margin:0;padding:0'>版本 V{$v1[version]}</h3>
+		<img id = "img" title = "Before"/><br/>
+		<!-- <span style="font-size:16px;font-weight:bold">V{$v1[version]}标签</span> -->
+	</div>
+	<div>
+		<h3 style='height:40px;line-height:40px;text-align:center; background:#ccc;margin:0;padding:0'>版本 V{$v2[version]}</h3>
+		<img id = "img2" title = "Before2"/><br/>
+		<!-- <span style="font-size:16px;font-weight:bold">V{$v2[version]}标签</span> -->
+	</div>
+	
+  </div>
+</div>
+		<script type="text/javascript" src="__ASSETS__/label/js/core.js"></script>
+<script>
+window.onload = function() {
+    // var oDiv = document.getElementById("tab");
+    // var oLi = oDiv.getElementsByTagName("div")[0].getElementsByTagName("li");
+    // var aCon = oDiv.getElementsByTagName("div")[1].getElementsByTagName("div");
+    // var timer = null;
+    // for (var i = 0; i < oLi.length; i++) {
+    //     oLi[i].index = i;
+    //     oLi[i].onmouseover = function() {
+    //         show(this.index);
+    //     }
+    // }
+    function show(a) {
+        index = a;
+        var alpha = 0;
+        for (var j = 0; j < oLi.length; j++) {
+            oLi[j].className = "";
+            aCon[j].className = "";
+            aCon[j].style.opacity = 0;
+            aCon[j].style.filter = "alpha(opacity=0)";
+        }
+        oLi[index].className = "cur";
+        clearInterval(timer);
+        timer = setInterval(function() {
+            alpha += 2;
+            alpha > 100 && (alpha = 100);
+            aCon[index].style.opacity = alpha / 100;
+            aCon[index].style.filter = "alpha(opacity=" + alpha + ")";
+            alpha == 100 && clearInterval(timer);
+        },
+        5)
+    }
+}
+</script>
+<script>	
+	var img = document.getElementById("img");
+	var mat, mat2;
+	img.onload = function(){
+		mat = cv.imread(img);
+		img2.onload = function(){
+			mat2 = cv.imread(img2);				
+		}
+	}
+	
+	img.src = "{$v1[bqfile]}";
+	img2.src = "{$v2[bqfile]}";
+	
+	var canvas = document.getElementById("demo"),
+		demo = canvas.getContext("2d");
+
+	function show(__mat){
+		canvas.width = __mat.col;
+		canvas.height = __mat.row;
+		demo.putImageData(cv.RGBA2ImageData(__mat), 0, 0);
+	}
+	
+	function runprocess(){
+		mat = cv.imread(img);
+		mat2 = cv.imread(img2);	
+		var info = cv.imlabelp(mat, mat2);
+		var matr1 = info.mat_dst;
+		var rect2 = info.mat_rect2;
+		
+		matr1 = cv.dilate(matr1);
+		matr1 = cv.erode(matr1);	
+		matr1 = cv.dilate(matr1);
+		matr1 = cv.dilate(matr1);
+
+		matr1 = cv.cvtColor(matr1, CV_RGBA2GRAY);
+		var matr2 = cv.threshold(matr1, 10);	
+		var res = cv.imlabel(matr2);	
+		
+		show(mat2);	
+		var c = document.getElementById("demo");  
+		var cxt = c.getContext("2d");    
+		cxt.fillStyle="#ff0000";  
+		cxt.strokeStyle = 'red';
+		cxt.lineWidth = '10';
+
+		for(var i = 0; i < res.length/3; i++){
+			cxt.beginPath();    
+			cxt.arc(res[3*i]+rect2[0],res[3*i+1]+rect2[1],res[3*i+2],0,Math.PI*2,true);  
+			cxt.closePath();       
+			cxt.stroke();
+		};
+	}
+</script>	
+	</body>
+</html>

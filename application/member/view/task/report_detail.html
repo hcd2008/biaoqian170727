@@ -1,0 +1,101 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<style>
+  .lieb_box{
+    margin-top: 15px;
+  }
+  #tupian{
+    width:55%;
+    border:1px solid #ccc;
+    min-height: 300px;
+    margin-bottom: 5px;
+    /*position: fixed;*/
+    float: left;overflow:hidden;
+  }
+  .pingshen{
+    width:30%;
+    float: right;
+    
+  }
+  .biao{
+    margin-bottom: 20px;
+    width:100%;
+    border:none;
+    border-collapse: collapse;
+    border-bottom: 1px dashed #ccc;
+  }
+  .biao td{
+    padding:0 5px;
+    border:none;
+  }
+  .lieb_box{
+    min-height: 500px;
+  }
+  .clear{
+    clear:both;
+  }
+  .green{
+    color: green;
+  }
+  .red{
+    color: red;
+  }
+</style>
+<div class="title">
+  <h2>标签评审-&gt;评审信息</h2></div>
+<div class="lieb_box">
+    <div>总体意见：{if $ztres['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $ztres['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}</div>
+   {volist name="lists" id="vo"}
+      {if $vo['state']}
+        <div>word评审：上传附件<a href="/public/uploads/{$vo['rev_attach']}"><img src="__ASSETS__/image/xiazai.png" alt=""></a>
+            评审结果：{if $vo['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $vo['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}
+        </div>
+      {else}
+        <div id="tupian">
+          <img width="100%" src="{$vo['rev_attach']}">
+        </div>
+        <div class="pingshen">
+          <p>评审结果：{if $vo['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $vo['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}</p>
+          {foreach $vo['question'] as $t}
+            <table class="biao">
+              <tr>
+                <td>问题摘要：</td>
+                <td style="color:red">{$t['qs_ext1']}</td></tr>
+              <tr>
+                <td width="80">问题类型：</td>
+                <td>{$typelist[$t['qs_typeid']]}</td></tr>
+              <tr>
+                <td>问题区域：</td>
+                <td>{$arealist[$t['qs_areaid']]}</td>
+              </tr>
+              <tr>
+                <td>判定依据：</td>
+                <td>{$t['qs_ext2']}</td></tr>
+              <tr>
+                <td>详情说明：</td>
+                <td>
+                  <p>{$t['qs_ext3']}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>评审时间：</td>
+                <td style="color:#999">{$t['qs_addtime']|timetodate}</td></tr>
+              {if $can_edit}
+              <tr>
+                <td clospan="2">
+                  <a href="{:url('member/task/question_edit')}?qsid={$t['qsid']}">编辑</a>
+                  <a onclick="return confirm('确定删除吗？')" href="{:url('member/task/question_delete')}?qsid={$t['qsid']}">删除</a></td>
+              </tr>
+              {/if}
+            </table>
+          {/foreach}
+          </div>
+          <div class="clear"></div>
+      {/if}
+   {/volist}
+  
+  
+</div>
+<script type="text/javascript">
+$('.email').addClass('curli');
+</script>

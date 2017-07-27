@@ -1,0 +1,102 @@
+<?php extract($item); ?>
+<div class="formbody">
+  <div id="usual1" class="usual">
+    <div class="itab">
+      <ul>
+        <li><a href="#tab1" class="selected">{$location}详情</a></li>
+      </ul>
+    </div>
+    
+    <div id="tab1" class="tabson">
+    <div class="formtitle"><span>部门评审</span></div>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th>部门</th>
+            <th>评审负责人</th>
+            <th>进度</th>
+            <th>评审状态</th>
+            <th>评审结果</th>
+            <th>提交时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {if !empty($dept_list)}
+        {foreach $dept_list as $k=>$t}
+          <tr>
+            <td>{$t['dept_name']}</td>
+            <td>{$t['realname']}</td>
+            <td>{$t['task_progress']}/{$t['task_progress_total']}</td>
+            <td>{$t['task_state']|task_state}</td>
+            <td>{$t['task_result_state']|dept_task_result_state}</td>
+            <td>{$t['task_result_time']|timetodate}</td>
+            <td>
+            	<a href="{:url('project/dept_task')}?taskid={$t['taskid']}" class="tablelink ajax">查看</a>
+            </td>
+          </tr>
+        {/foreach}
+        {/if}
+        </tbody>
+      </table>
+      <div id="dept_task_list"></div>
+      <div class="formtitle"><span>个人评审</span></div>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th>部门</th>
+            <th>评审人</th>
+            <th>评审状态</th>
+            <th>评审结果</th>
+            <th>提交时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {if !empty($member_list)}
+        {foreach $member_list as $k=>$t}
+          <tr>
+            <td>{$t['dept_name']}</td>
+            <td>{$t['realname']}</td>
+            <td>{$t['rev_state']|review_state}</td>
+            <td>{$t['rev_result_state']|review_result_state}</td>
+            <td>{$t['rev_report_time']|timetodate}</td>
+            <td><a href="{:url('project/report_detail')}?revid={$t['revid']}" class="tablelink layer_open">详情</a></td>
+          </tr>
+        {/foreach}
+        {/if}
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="reindex"  style="margin-left:350px;"><a href="javascript:;" onclick="javascript:history.go(-1);" target="_parent">返回</a></div>
+  </div>
+</div>
+<script type="text/javascript">
+$('.tablelist tbody tr:odd').addClass('odd');
+
+$('.ajax').click(function(){
+	var url = $(this).attr('href');	
+	$.get(url,function(data){
+		$('#dept_task_list').empty().hide().append(data).show('fast');
+	});
+	return false;
+});
+
+$(document).on('click','.layer_open',function(){
+	var url = $(this).attr('href');	
+	layer.open({
+	  type: 2,
+	  title: '评审报告详情',
+	  shadeClose: true,
+	  shade: 0.8,
+	  area: ['80%', '90%'],
+	  content: url
+	});
+	return false;
+});
+
+
+
+</script> 
+

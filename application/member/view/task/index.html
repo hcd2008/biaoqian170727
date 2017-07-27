@@ -1,0 +1,74 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title">
+  <h2>标签评审</h2></div>
+  <div class="query" style="border-bottom:0px;">
+  <div class="search">
+ 	<form id="foodmate_search" method="get">
+    <input name="state" type="hidden" value="{$state}" />
+    <input name="kw" id="destoon_kw" type="text" class="sousuo" value="请输入关键词" onfocus="if(this.value=='请输入关键词') this.value='';" onkeyup="STip(this.value);" x-webkit-speech="" speech=""><input class="search_s" type="submit" value=" ">
+  </form> 
+</div></div>
+<div class="wdxmbox">
+<div class="table-operate ue-clear">
+  <a class="jin" id="state_1" href="?state=1">进行中</a>
+  <a class="check" id="state_3" href="?state=3">已完成</a>
+</div>
+</div>
+<div class="lieb_box">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="wdwmbg" style="border:0px;">
+    <tr bgcolor="#fff">
+      <th width="20%">项目名称</th>
+      <th width="5%">版本</th>
+      {if $state==$Think.REVIEW_STATE_REPORT}
+      <th width="">评审状态</th>
+      <th width="">评审结果</th>
+      <th width="">提交报告时间</th>
+      <th width="">查看报告详情</th>
+      {else}
+      <th width="10%">分配人</th>
+      <th width="6%">状态</th>
+      <th width="14%">分配时间</th>
+      <th width="25%">操作</th>
+      <th width="10%">项目信息</th>
+      <th width="10%">我的评审信息</th>
+      {/if}
+    </tr>
+    {foreach $review_list as $t}
+    <tr bgcolor="#fff">
+        <td class="operate">{$t['title']}</td>
+        <td align="center">V{$t['version']}</td>
+        {if $state==$Think.REVIEW_STATE_REPORT}
+        <td align="center">{$t['rev_state']|review_state}</td>
+        <td align="center">{$t['rev_result_state']|review_result_state}</td>
+        <td align="center">{$t['rev_report_time']|timetodate}</td>
+        <td align="center"><a href="{:url('/member/task/report_detail')}?revid={$t['revid']}">查看</a></td>
+        {else}
+        <td align="center">
+          <a class="member" href="{:userinfo_url($t['rev_from_userid'])}">{$t['userinfo_ext']}</a>
+        </td>
+        <td align="center">{$t['rev_state']|review_state}</td>
+        <td align="center">{$t['rev_addtime']|timetodate}</td>
+        <td align="center">
+          {if $t['rev_state'] == REVIEW_STATE_NEW}
+          <a target="_blank" href="{:url('member/task/step1')}?revid={$t['revid']}&banb={$t['version']}">进行评审</a>&nbsp;
+          {else}
+          <a target="_blank" href="{:url('member/task/step1')}?revid={$t['revid']}&banb={$t['version']}">继续评审</a>&nbsp;
+          <a target="_blank" href="{:url('member/task/step1')}?revid={$t['revid']}&anew=1&banb={$t['version']}" onclick="return confirm('重新评审,现在的评审信息会丢失，确定继续吗？');">重新评审</a>&nbsp;
+          <a href="{:url('member/task/step3')}?revid={$t['revid']}" onclick="return confirm('您确定提交评审报告？');">提交报告</a>&nbsp;
+          {/if}
+          <a style="display:none;" href="{:url('member/task/forward')}?revid={$t['revid']}">任务转交</a>
+        </td>
+        <td align="center" bgcolor="#FFFFFF"><a href="{:url('member/task/show')}?revid={$t['revid']}">查看</a></td>
+        <td align="center" bgcolor="#FFFFFF"><a href="{:url('member/task/report_detail')}?revid={$t['revid']}">查看/编辑</a></td>
+        {/if}
+    </tr>
+    {/foreach}
+    </table>
+    <div class="pages"> </div>
+  </div>
+<script type="text/javascript">
+var state = '{$state}';
+$('.email').addClass('curli');
+$('#state_'+state).addClass('dqxm');
+</script>

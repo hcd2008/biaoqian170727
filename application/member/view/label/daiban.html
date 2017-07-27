@@ -1,0 +1,180 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<style>
+  .table-box{
+    margin-bottom: 10px;
+  }
+</style>
+<div>
+{if $U['role']==1 or $U['role']==3 or $U['role']==5 or $U['role']==7}
+<div class="title">
+  <h2>待办项目</h2>
+</div>
+<div class="table-box">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" class="wdwmbg" bgcolor="#c1d3de" style="border:0px;">
+  <tr>
+    <th width="120px" >项目名称</th>
+    <th width="100px" >版本号</th>
+    <th width="100px" >模式</th>
+    <th width="100px" >创建时间</th>
+    <th  >评审进度</th>
+    <th  >评审结果</th>
+    <th >操作</th>
+
+    <th  >查看</th>
+  </tr>
+    {foreach $xms as $t}
+     <tr>
+      <td width="120px" bgcolor="#FFFFFF" ><a href="{:url('project/show')}?id={$t['id']}">{$t['title']}</a></td>
+      <td width="100px" align="center" bgcolor="#FFFFFF">V{$t['version']}</td>
+      <td width="100px" align="center" bgcolor="#FFFFFF">{$t['diy_id']?'自定义':'普通'}</td>
+      <td width="100px" align="center" bgcolor="#FFFFFF">{$t['addtime']|timetodate}</td>
+      {if $state == 2 || $state == 3}
+      <td align="center" bgcolor="#FFFFFF">{$t['addtime']|timetodate}</td>
+      {/if}
+      {if $state=1}
+      <td align="center" bgcolor="#FFFFFF">{$t['progress']}/{$t['progress_total']}</td>
+      {/if}
+      {if $state == 3}
+      <td align="center" bgcolor="#FFFFFF">{$t['result_state']|project_result_state}</td>
+      {else}
+      <td align="center" bgcolor="#FFFFFF">{$t['result_state']|project_result_state}</td>
+      {/if}
+      {if $state ==1}
+      <td align="center" bgcolor="#FFFFFF">
+      &nbsp;&nbsp;
+      {if $t['result_state'] == PROJECT_RESULT_STATE_REJECT}
+        {if $t['diy_id']}
+        <a href="{:url('project/edit')}?id={$t['id']}">重新编辑</a>
+        {else}
+        <a href="{:url('project/create')}?id={$t['id']}&op=reset">重新提交</a>
+        {/if}
+      {elseif $t['progress_total'] == 0 && $t['diy_id'] ==0}
+        <a href="{:url('project/edit')}?id={$t['id']}">编辑</a>
+      {/if}
+      <a href="{:url('project/stop')}?id={$t['id']}" onclick="return confirm('确定终止项目吗？')">终止项目</a>
+      {if $t['diy_id']==0}
+      <a href="{:url('project/adddept')}?id={$t['id']}">添加部门</a>
+      <a href="{:url('project/adduser')}?id={$t['id']}">添加评审员</a>
+      {/if}
+      {if $t['diy_id'] && $t['diy_step'] == 0}
+      <a href="{:url('member/diy/start')}?id={$t['id']}">启动流程</a>
+      {else}
+      
+      {/if}
+      </td>
+      
+      {/if}
+      <td align="center" bgcolor="#FFFFFF"><a href="{:url('project/show')}?id={$t['id']}">详情</a></td>
+    </tr>
+    {/foreach}
+
+</table>
+</div>
+{/if}
+{if $U['role']==4 or $U['role']==5 or $U['role']==6 or $U['role']==7}
+  <div class="title">
+    <h2>待办任务</h2>
+  </div>
+  <div class="table-box">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="wdwmbg" style="border:0px;">
+    <tbody><tr>
+      <th width="120px">项目名称</th>
+      <th width="100px">创建人</th>
+      <th width="100px">创建时间</th>
+      <th width="100px">评审进度</th>
+      {if $state=1}
+      <th>状态</th>
+      <th>操作</th>
+      {/if}
+      <th>查看</th>
+    </tr>
+    {foreach $task_list as $t}
+    <tr>
+        <td class="operate">{$t['title']}</td>
+        <td align="center">
+           <a class="member" href="{:userinfo_url($t['task_from_userid'])}">{$t['userinfo_ext']}</a>
+        </td>
+        <td align="center">{$t['task_addtime']|timetodate}</td>
+        <td align="center">{if $t['task_progress_total']}{$t['task_progress']}/{$t['task_progress_total']}{/if}</td>
+        {if $state=1}
+        <td align="center" width="150px">
+          <span class="{if TIMES > $t['starttime'] && TIMES < $t['endtime']}{if TIMES>$t['remindtime']}red{else}cur{/if}{else}black{/if}">{$t['task_state']|task_state}</span>
+        </td>
+        <td align="center">
+        {if $t['task_state'] == TASK_STATE_NEW}
+          <a href="{:url('member/dept_task/step1')}?taskid={$t['taskid']}">分配任务</a>
+        {elseif $t['task_state'] == TASK_STATE_SEND}
+          等待评审结束
+        {elseif $t['task_state'] == TASK_STATE_REWIEW}
+          <a href="{:url('member/dept_task/step2')}?taskid={$t['taskid']}">汇总部门意见</a>
+        {elseif $t['task_state'] == TASK_STATE_SUM}
+          <a href="{:url('member/dept_task/step2')}?taskid={$t['taskid']}">继续汇总</a>
+          <a href="{:url('member/dept_task/step4')}?taskid={$t['taskid']}">上报部门意见</a>
+        {elseif $t['task_state'] == TASK_STATE_APPROVAL_OK}
+          <a href="{:url('member/dept_task/step4')}?taskid={$t['taskid']}">重新上报</a>
+        {/if}
+        </td>
+        {/if}
+        <td align="center" bgcolor="#FFFFFF"><a href="{:url('member/dept_task/show')}?taskid={$t['taskid']}">查看</a></td>
+      </tr>
+    {/foreach}
+    </table>
+    
+  </div>
+{/if}
+{if $U['role']==2 or $U['role']==3 or $U['role']==6 or $U['role']==7}
+  <div class="title">
+    <h2>待评审标签</h2></div>
+  <div class="table-box">
+      <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="wdwmbg" style="border:0px;">
+      <tr bgcolor="#fff">
+        <th width="120px">项目名称</th>
+        <th width="100px">版本</th>
+        
+        <th width="100px">分配人</th>
+        
+        <th width="100px">分配时间</th>
+        <th >状态</th>
+        <th >项目信息</th>
+        <th >操作</th>
+        
+        <th >我的评审信息</th>
+      </tr>
+      {foreach $review_list as $t}
+      <tr bgcolor="#fff">
+          <td >{$t['title']}</td>
+          <td align="center">V{$t['version']}</td>
+          {if $state==$Think.REVIEW_STATE_REPORT}
+          <td align="center">{$t['rev_state']|review_state}</td>
+          
+          <td align="center">{$t['rev_report_time']|timetodate}</td>
+          <td align="center">{$t['rev_result_state']|review_result_state}</td>
+          <td align="center"><a href="{:url('/member/task/report_detail')}?revid={$t['revid']}">查看</a></td>
+          {else}
+          <td align="center">
+            <a class="member" href="{:userinfo_url($t['rev_from_userid'])}">{$t['userinfo_ext']}</a>
+          </td>
+         
+          <td align="center">{$t['rev_addtime']|timetodate}</td>
+           <td align="center">{$t['rev_state']|review_state}</td>
+            <td align="center" bgcolor="#FFFFFF"><a href="{:url('member/task/show')}?revid={$t['revid']}">查看</a></td>
+          <td align="center">
+            {if $t['rev_state'] == REVIEW_STATE_NEW}
+            <a target="_blank" href="{:url('member/task/step1')}?revid={$t['revid']}&banb={$t['version']}">进行评审</a>&nbsp;
+            {else}
+            <a target="_blank" href="{:url('member/task/step1')}?revid={$t['revid']}&banb={$t['version']}">继续评审</a>&nbsp;
+            <a target="_blank" href="{:url('member/task/step1')}?revid={$t['revid']&banb={$t['version']}}&anew=1" onclick="return confirm('重新评审,现在的评审信息会丢失，确定继续吗？');">重新评审</a>&nbsp;
+            <a href="{:url('member/task/step3')}?revid={$t['revid']}" onclick="return confirm('您确定提交评审报告？');">提交报告</a>&nbsp;
+            {/if}
+            <a style="display:none;" href="{:url('member/task/forward')}?revid={$t['revid']}&banb={$t['version']}">任务转交</a>
+          </td>
+         
+          <td align="center" bgcolor="#FFFFFF"><a href="{:url('member/task/report_detail')}?revid={$t['revid']}">查看/编辑</a></td>
+          {/if}
+      </tr>
+      {/foreach}
+      </table>
+    </div>
+  </div>
+  {/if}

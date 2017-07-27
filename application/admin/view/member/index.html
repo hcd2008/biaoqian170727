@@ -1,0 +1,252 @@
+<link href="../css/select.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+<script type="text/javascript" src="../js/select-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+    $(".select1").uedSelect({
+		width : 345			  
+	});
+	$(".select2").uedSelect({
+		width : 167
+	});
+	$(".select3").uedSelect({
+		width : 100
+	});
+});
+</script>
+<div class="formbody">
+  <div id="usual1" class="usual">
+    <div class="itab">
+      <ul>
+        <li><a href="#tab1">人员管理</a></li>
+        <li><a href="#tab2">添加人员</a></li>
+        {if !empty($user_info)}<li><a href="#tab3" class="selected">编辑人员</a></li>{/if}
+      </ul>
+    </div>
+    <div id="tab1" class="tabson">
+    <form action="" method="get">
+      <ul class="seachform">
+      	<li>
+            <label>部门</label>  
+            <div class="vocation">
+                <select class="select3" name="depid">
+                    <option value="">所有部门</option>
+                    {foreach $dept_list as $t}
+                    <option {if $depid==$t['depid']}selected="selected"{/if} value="{$t['depid']}">{$t['dept_name']}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+
+        <li>
+          <label>综合查询</label>
+          <input name="kw" type="text" class="scinput" />
+        </li>
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="scbtn" value="查询"/>
+        </li>
+      </ul>
+     </form>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th width="60px"><input name="" type="checkbox" value="" checked="checked"/></th>
+            <th width="60px">ID<i class="sort"><img src="../images/px.gif" /></i></th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>部门</th>
+            <th>邮箱</th>
+            <th>电话</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {foreach $member_list as $k=>$t}
+          <tr>
+            <td><input name="deptid" type="checkbox" value="{$t['userid']}" /></td>
+            <td>{$t['userid']}</td>
+            <td>{$t['username']}</td>
+            <td><a class="member" href="{:userinfo_url($t['userid'])}">{$t['realname']}</a></td>
+            <td>{$t['dept_name']}</td>
+            <td>{$t['email']|default=''}</td>
+            <td>{$t['phone']}</td>
+            <td>{$t['work_state']|work_state}</td>
+            <td>
+            	<a href="{:url('member/delete')}?userid={$t['userid']}" onclick="return confirm('您确定删除吗？')" class="tablelink"> 删除</a>
+                <a href="{:url('member/edit')}?userid={$t['userid']}" class="tablelink">编辑</a>
+            </td>
+          </tr>
+        {/foreach}
+        </tbody>
+      </table>
+    </div>
+    <div id="tab2" class="tabson">
+    <form method="post" action="{:url('member/add')}">
+      <ul class="forminfo">
+        <li>
+          <label>用户名<b>*</b></label>
+          <input name="username" type="text" class="dfinput" value="{$username|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>真实姓名<b>*</b></label>
+          <input name="realname" type="text" class="dfinput" value="{$realname|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+        	<label>部门<b>*</b></label>
+            <div class="vocation">
+            <select name="dept" class="select2">
+                <option value="">请选择部门</option>
+                {foreach $dept_list as $t}
+                <option value="{$t['depid']}">{$t['dept_name']}</option>
+                {/foreach}
+                </select>
+            </div>
+        </li>
+        
+        <li>
+          <label>角色<b>*</b></label>
+          {foreach $roles as $k=>$t}
+          <div class="vocation">
+              <label><input type="checkbox" name="role[]" value="{$k}" />{$t}&nbsp;&nbsp;</label>
+          </div>
+          {/foreach}
+        </li>
+        <li>
+           <label>检查<b>*</b></label>
+           
+          <label><input type="checkbox" name="js_check" value="1" />检查者&nbsp;&nbsp;</label>
+           
+        </li>
+        <li>
+          <label>密码<b>*</b></label>
+          <input name="password" type="text" class="dfinput" value="{$password|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>邮箱<b></b></label>
+          <input name="email" type="text" class="dfinput" value="{$email|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>电话<b></b></label>
+          <input name="phone" type="text" class="dfinput" value="{$phone|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>手机<b></b></label>
+          <input name="telephone" type="text" class="dfinput" value="{$telephone|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>职位<b></b></label>
+          <input name="zhiwei" type="text" class="dfinput" value="{$zhiwei|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>职责<b></b></label>
+          <input name="zhize" type="text" class="dfinput" value="{$zhize|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>工作状态<b></b></label>
+          <div class="vocation">
+          <select name="work_state" class="select2">
+        	<option value="3" selected="selected">正常</option>
+            <option value="1">休假</option>
+          </select>
+          </div>
+        </li>
+        
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="btn" value="添加"/>
+        </li>
+      </ul>
+    </form>
+    </div>
+    {if !empty($user_info)}
+    <?php extract($user_info); ?>
+    <div id="tab3" class="tabson">
+    <form method="post" action="{:url('member/edit')}">
+    <input name="userid" type="hidden" value="{$userid}" />
+      <ul class="forminfo">
+        <li>
+          <label>用户名<b>*</b></label>
+          <input name="username" type="text" class="dfinput" value="{$username|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>真实姓名<b>*</b></label>
+          <input name="realname" type="text" class="dfinput" value="{$realname|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+        	<label>部门<b>*</b></label>
+            <div class="vocation">
+            <select name="dept" class="select2">
+                <option value="">请选择部门</option>
+                {foreach $dept_list as $t}
+                <option value="{$t['depid']}" {if $dept==$t['depid']}selected="selected"{/if}>{$t['dept_name']}</option>
+                {/foreach}
+                </select>
+            </div>
+        </li>
+        
+        <li>
+          <label>角色<b>*</b></label>
+          {foreach $roles as $k=>$t}
+          <div class="vocation">
+              <label><input type="checkbox" name="role[]" {if in_array($k,$role_array)}checked="checked"{/if} value="{$k}" />{$t}&nbsp;&nbsp;</label>
+          </div>
+          {/foreach}
+        </li>
+         <li>
+           <label>检查<b>*</b></label>
+           
+          <label><input type="checkbox" name="js_check" value="1"  {if $js_check==1}checked="checked"  {/if} />检查者&nbsp;&nbsp;</label>
+           
+        </li>
+        <li>
+          <label>密码<b>*</b></label>
+          <input name="password" type="text" class="dfinput" value=""  style="width:518px;"/><i>留空为不修改密码</i>
+        </li>
+        <li>
+          <label>邮箱<b></b></label>
+          <input name="email" type="text" class="dfinput" value="{$email|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>电话<b></b></label>
+          <input name="phone" type="text" class="dfinput" value="{$phone|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>手机<b></b></label>
+          <input name="telephone" type="text" class="dfinput" value="{$telephone|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>职位<b></b></label>
+          <input name="zhiwei" type="text" class="dfinput" value="{$zhiwei|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>职责<b></b></label>
+          <input name="zhize" type="text" class="dfinput" value="{$zhize|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>工作状态<b></b></label>
+          <div class="vocation">
+          <select name="work_state" class="select2">
+        	<option value="3" selected="selected">正常</option>
+            <option value="1">休假</option>
+          </select>
+          </div>
+        </li>
+        
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="btn" value="保存"/>
+        </li>
+      </ul>
+    </form>
+    </div>
+    {/if}
+  </div>
+  <script type="text/javascript"> 
+      $("#usual1 ul").idTabs(); 
+    </script> 
+  <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script> 
+</div>

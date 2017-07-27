@@ -1,0 +1,82 @@
+{layout name="layout" /}
+
+<style type="text/css">
+.sys_upload{padding: 10px;}
+.sys_upload ul li{padding: 10px;}
+.sys_upload ul li .sys_btn{padding: 2px;width: 70px;}
+</style>
+<div id="right">  <link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title" style="border-bottom:0px;">
+  <h2>标签检查</h2>
+</div>
+
+<form id="form1" name="form1" method="post" action="{:url('member/Jiancha/add')}">
+<input hidden="hidden" type="hidden" name="id" id="id" value="{$id}" />
+<table  width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+  <tbody  id="e">
+  <tr id="option0">
+    <td colspan="2" class="cj_dbt">编写标签</td>
+  </tr>
+ 
+  <tr id="option1" bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>所属产品</th>
+    <td align="left">
+      {$proname}
+    </td>
+  </tr>
+   <tr id="option2" bgcolor="#ffffff">
+          <th width="20%">部门的标签评审人员</th>
+          <td>
+         {volist name='member_list' id='vo_me'}
+            <input type="checkbox" name="biaoqian_users[]" value="{$vo_me['userid']}" {if !empty($vo_me['locked'])}disabled="disabled"{else}{/if}>&nbsp;{$vo_me['realname']}&nbsp;&nbsp;&nbsp;
+         {/volist}
+            </td>
+        </tr>
+  <tr id="option3" bgcolor="#ffffff">
+       <th width="20%">检查项</th>
+       
+       <td id="qq" align="left"><input type="text" name="jianchaxiang[]" id="jpost[jianchaxiang][]">
+       <ul id="industry_ul">
+       </ul>
+  
+       </td>
+  </tr>
+  </tbody>
+  <tr  bgcolor="#ffffff">
+        <td colspan="2" class="cj_dbt">
+        <input type="button" name="tianja" onclick="addRow()" value="增加" >
+        <input type="submit" value="提交">
+        </td>
+  </tr>
+  </table>
+  
+<script type="text/javascript">
+
+var rowCount=3;  //行数默认4行  
+  
+//添加行  
+function addRow(){  
+    rowCount++;  
+    var newRow='<tr bgcolor="#ffffff" id="option'+rowCount+'"><th width="20%">检查项</th><td id="qq" align="left"><input type="text" name="jianchaxiang[]" id="jpost[jianchaxiang][]"><a href="#" onclick=delRow('+rowCount+')>删除</a></td></tr>';  
+    $('#e').append(newRow);  
+}  
+   
+ function delRow(rowIndex){  
+    $("#option"+rowIndex).remove();  
+    rowCount--;  
+}  
+
+</script>
+</form>
+<form method="post" action="{:url('member/Jiancha/add')}" class="form-signin" enctype="multipart/form-data" >
+    <input name="file_stu" type="file" class="form-control">
+    <button class="btn btn-lg btn-primary btn-block">导入</button>
+</form>
+<div>
+  
+  <form action="upload_file.php" method="post" enctype="multipart/form-data">
+<input type="file" name="file" id="file" /> 
+<input type="submit" name="submit" value="Submit" />
+</form>
+</div>
+</div>

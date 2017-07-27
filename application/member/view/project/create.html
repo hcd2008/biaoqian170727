@@ -1,0 +1,167 @@
+{layout name="layout" /}
+<?php if(isset($project)){extract($project);} ?>
+<style type="text/css">
+.sys_upload{padding: 10px;}
+.sys_upload ul li{padding: 10px;}
+.sys_upload ul li .sys_btn{padding: 2px;width: 70px;}
+</style>
+<div id="right">  <link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title" style="border-bottom:0px;">
+  <h2>创建项目</h2>
+</div>
+<script>
+  $(function(){
+    $("#real_length").blur(function(){
+      var name = $("#title").val();
+      var ktime = $("#starttime").val();
+      var etime = $("#endtime").val();
+      var dept = "{$_dept_name}";
+      var username = "{$_realname}"
+      var str="您有一个新标签评审任务，<br>项目名称："+name+"，<br />开始日期："+ktime+"<br />截止日期："+etime+"，<br />创建人：【"+dept+"】"+username+"<br><br />请及时处理。";
+      $("#notice_content").val(str);
+    })
+  })
+</script>
+<form id="form1" name="form1" enctype="multipart/form-data" method="post" action="" onsubmit="return Dcheck();">
+<input name="id" type="hidden" value="{$id|default=''}" />
+<input name="proid" type="hidden" value="{$proid|default=''}" />
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+  <tbody>
+  <tr>
+    <td colspan="2" class="cj_dbt">填写项目信息</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center">自定义流程</th>
+    <td align="left">
+      <select name="project[diy_id]" id="diy_id" class="fc">
+        <option value="0">--请选择--</option>
+        {foreach $diy_list as $k=>$t}
+          <option value="{$t.diy_id}" {if isset($diy_id) && $t['diy_id']==$diy_id}selected{/if}>{$t.diy_title}</option>
+        {/foreach}
+      </select>
+      <span class="highlight">  </span>
+      <span class="tip">（<a href="{:url('member/diy/edit')}">新建自定义流程</a>）</span>
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th width="18%" align="center"><span class="highlight">*</span>标签类型</th>
+    <td width="82%" align="left">
+      <select name="project[type]" id="type" class="fc">
+        {foreach $label_type as $k=>$t}
+        <option value="{$k}" {if isset($type) && $type==$k}selected{/if}>{$t}</option>
+        {/foreach}
+      </select>
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>项目名称</th>
+    <td align="left"><input name="project[title]" type="text" id="title" size="50" class="fc" value="{$title|default=''}"><span class="highlight"> * </span><span class="tip">（请填写项目名称！）</span></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>所属产品</th>
+    <td align="left">
+      <select name="project[product_id]" id="pid" class="fc">
+        <option value="0">--请选择--</option>
+        {foreach $product_list as $k=>$t}
+          <option value="{$t.pid}" {if isset($product_id) && $t['pid']==$product_id}selected{/if}>{$t.proname}</option>
+        {/foreach}
+      </select>
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center">项目描述</th>
+    <td align="left"><textarea name="project[content]" cols="50" rows="5" id="des" class="fc">{$content|default=''}</textarea></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>开始日期</th>
+    <td align="left">
+      <input type="text" name="project[starttime]" id="starttime" value="{$starttime|default=''}" size="20" onFocus="WdatePicker({isShowClear:true,readOnly:true})" class="fc Wdate">
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>结束日期</th>
+    <td align="left">
+      <input type="text" name="project[endtime]" id="endtime" value="{$endtime|default=''}" size="20" onFocus="WdatePicker({isShowClear:true,readOnly:true})" class="fc Wdate">
+      <span class="highlight"> * </span><span class="tip">（请填写项目截止日期！）</span>
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>预警日期</th>
+    <td align="left"><input type="text" name="project[remindtime]" id="remindtime" value="{$remindtime|default=''}" size="20" onFocus="WdatePicker({isShowClear:true,readOnly:true})" class="fc Wdate"></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>标签文件</th>
+    <td align="left"><input type="file" name="fujian[]" multiple>(按住Ctrl键选中所有需要上传的附件，支持格式jpg|png|doc|docx|pdf)
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>标签尺寸</th>
+    <td align="left">长：<input name="project[real_length]"  value="{$real_length|default=''}" type="text" id="real_length" size="10" class="fc">&nbsp;&nbsp;
+    宽：<input name="project[real_width]"  value="{$real_width|default=''}" type="text" id="real_length" size="10" class="fc">
+    <select name="project[unit]" id="unit" class="fc">
+    {foreach $label_size_unit as $t}
+      <option value="{$t}">{$t}</option>
+    {/foreach}
+    </select>
+    <span class="highlight"> * </span><span class="tip">（请务必如实填写标签图片实际宽度，防止测量出现误差！）</span></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="cj_dbt">事务提醒</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>提醒方式</th>
+      <td>
+        {foreach $notice_type_list as $k=>$t}
+        <input type="checkbox" name="project[notice_type][]" value="{$k}">&nbsp;{$t}&nbsp;&nbsp;&nbsp;
+        {/foreach}
+      </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>增加提醒人</th>
+      <td><input type="hidden" name="project[notice_users_ext]" class="fc" size="50" id="yxid"><span id="yxren"></span>&nbsp;&nbsp;<a class="chose" href="{:url('member/ext/dept_member_list')}">[+选择]</a>&nbsp;<span style="color:#888;cursor:pointer" id="qingkong">[-清空]</span></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>提醒内容</th>
+      <td>
+         <textarea name="project[notice_content]" id="notice_content" cols="100" rows="3"></textarea>
+      </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="cj_dbt">会签</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <td colspan="2">
+      <textarea name="project[sign]" id="tarea"></textarea>
+    </td>
+  </tr></tbody></table>
+<div class="pages"><input type="submit" class="mybtn" value="提交"> </div>
+<script type="text/javascript">
+$('.gongwen').addClass('curli');
+if(Dd('title').value == '') {
+  Dd('title').focus();
+}
+function Dcheck() {
+  if(Dd('title').value == '') {
+    confirm('请输入项目名称');
+    Dd('title').focus();
+    return false;
+  }
+  if(Dd('endtime').value == '') {
+    confirm('请输入项目截止日期');
+    Dd('endtime').focus();
+    return false; 
+  }
+  if(Dd('bqfile').value == '') {
+    confirm('请上传标签文件');
+    Dd('bqfile').focus();
+    return false;
+  }
+  if(Dd('real_length').value == '') {
+    confirm('请填写标签图片实际宽度');
+    Dd('real_length').focus();
+    return false;
+  }
+}
+</script>  
+</form>
+</div>

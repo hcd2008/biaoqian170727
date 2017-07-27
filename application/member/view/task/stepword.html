@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <title>标签评审</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="__ASSETS__/label/css/ps.css">
+    <link rel="stylesheet" href="__ASSETS__/label/css/style.css">
+    <style>
+        #main{
+          width:600px;
+          margin:0 auto;
+          margin-top: 100px;
+          padding:20px;
+        }
+        .mytb{
+          width:100%;
+          border-collapse: collapse;
+        }
+        .mytb td{
+          padding: 10px;
+          border:1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+      <form action="{:url('member/task/step2word')}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="fileid" value="{$fileid}">
+        <input type="hidden" name="revid" value="{$revid}">
+        <input type="hidden" name="proid" value="{$proid}"> 
+        <table class="mytb">
+            <tr>
+              <td>标签文件：</td>
+              <td><a href="/public/uploads/{$files[$fileid]['file']}"><img src="__ASSETS__/image/xiazai.png" alt="下载" title="下载"></a></td>
+            </tr>
+            <tr>
+              <td>结果上传：</td>
+              <td>
+                  <input type="file" name="resfile" id=""><span style="font-size: 13px;color: #777">(上传一个word文档)</span>
+              </td>
+            </tr>
+            <tr>
+              <td>评审结果：</td>
+              <td><input type="radio" name="result" checked value=1>通过审核&nbsp;&nbsp;<input type="radio" name="result" id="" value=0>拒绝通过</td>
+            </tr>
+            <tr>
+              <td align="center" colspan="2">
+                <input type="submit" value="提交">
+              </td>
+            </tr>
+        </table>
+      </form>
+    </div>
+
+            <div id="tasklist">
+              <table class="tasktb">
+                <tr>
+                  {volist name="files" id="vo"}
+                      <td {if $vo['id']==$fileid}class="dqfile"{/if} width="120px"  style="text-align: center;">
+                      {if $vo['ext']}
+                          <a href="{:url('task/stepword',array('revid'=>$revid,'banb'=>$banb,'fileid'=>$vo['id'],'filetype'=>1))}">
+                            <img src="__ASSETS__/image/word.png" alt="">
+                          </a>
+                      {else}
+                      <a onclick="return confirm('即将跳转到下一页面，请确保已提交评审状态，否则图片不会保存')" href="{:url('task/step1',array('revid'=>$revid,'banb'=>$banb,'fileid'=>$vo['id']))}">
+                        <img width=100% src="{if $vo['psfile']}{$vo['psfile']}{else}/public/uploads/{$vo['file']}{/if}" alt="">
+                      </a>
+                      {/if}
+                      </td>
+
+                  {/volist}
+                  <td width="120px"  style="text-align: center;">
+                      <a href="{:url('task/stephuizong',array('revid'=>$revid,'banb'=>$banb))}">
+                            <img src="__ASSETS__/image/huizong.png" alt="">
+                          </a>
+                  </td>
+                </tr>
+                <tr>
+                  {volist name="files" id="vo"}
+                      <td class="psstate">{if $vo['psres']}{if $vo['psres']==REVIEW_RESULT_STATE_PASS}<span class="tongguo">通过审核({$vo['pssum']})</span>{/if}{if $vo['psres']==REVIEW_RESULT_STATE_REJECT}<span class="jujue">拒绝通过({$vo['pssum']})</span>{/if}{else}未评审{/if}</td>
+                  {/volist}
+                  <td class="psstate">总体评价</td>
+                </tr>
+              </table>
+            </div>
+</body>
+
+</html>

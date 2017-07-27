@@ -1,0 +1,93 @@
+<link href="../css/select.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+<script type="text/javascript" src="../js/select-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+    $(".select1").uedSelect({
+		
+	});
+	$(".select2").uedSelect({
+
+	});
+	$(".select3").uedSelect({
+
+	});
+});
+</script>
+<div class="formbody">
+  <div id="usual1" class="usual">
+    <div class="itab">
+      <ul>
+        <li><a href="#tab1">企业管理</a></li>
+        <li><a href="#tab2">添加企业</a></li>
+        {if !empty($item)}<li><a href="#tab3" class="selected">编辑企业</a></li>{/if}
+      </ul>
+    </div>
+    <div id="tab1" class="tabson">
+    <form action="{:url('company/index')}" method="get">
+      <ul class="seachform">
+        <li>
+          <label>综合查询</label>
+          <input name="kw" type="text" class="scinput" />
+        </li>
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="scbtn" value="查询"/>
+        </li>
+      </ul>
+     </form>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th>企业类型</th>
+            <th>企业名称</th>
+            <th>企业代号</th>
+            <th>企业地址</th>
+            <th>产地</th>
+            <th>QS号</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {if !empty($items)}
+        {foreach $items as $k=>$t}
+          <tr>
+            <td>{$t['com_type']}</td>
+            <td>{$t['com_name']}</td>
+            <td>{$t['com_code']}</td>
+            <td>{$t['com_address']}</td>
+            <td>{$t['com_origin']}</td>
+            <td>{$t['com_qs']}</td>
+            <td>
+            	<a href="{:url('company/delete')}?com_id={$t['com_id']}" onclick="return confirm('您确定删除吗？')" class="tablelink"> 删除</a>
+                <a href="{:url('company/edit')}?com_id={$t['com_id']}" class="tablelink">编辑/查看</a>
+            </td>
+          </tr>
+        {/foreach}
+        {/if}
+        </tbody>
+      </table>
+      {if !empty($items)}
+      <div class="pagin">{$items->render()}</div>
+      {/if}
+    </div>
+    <div id="tab2" class="tabson">
+    <form method="post" action="{:url('company/add')}">
+    {:widget('common/from/show',['model'=>'company','act'=>'insert'])}
+    </form>
+    </div>
+    {if !empty($item)}
+    <div id="tab3" class="tabson">
+    <form method="post" action="{:url('company/edit')}">
+    {:widget('common/from/show',['model'=>'company','act'=>'insert','data'=>$item])}
+    </form>
+    </div>
+    {/if}
+  </div>
+  <script type="text/javascript"> 
+      $("#usual1 ul").idTabs(); 
+    </script> 
+  <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script> 
+</div>

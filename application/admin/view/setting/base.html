@@ -1,0 +1,41 @@
+<div class="formbody">
+  <div class="formtitle"><span>基本信息</span></div>
+  <?php extract($setting); ?>
+  <form method="post">
+  <ul class="forminfo">
+    <li>
+      <label>系统名称</label>
+      <input name="setting[sitename]" type="text" class="dfinput" value="{$sitename|default=''}" />
+    <i></i></li>
+    
+    <li>
+      <label>版权信息</label>
+      <textarea name="setting[copyright]" id="copyright" class="textinput">{$copyright|default=''}</textarea>
+    <i></i></li>
+    
+    <li>
+      <label>标签类型</label>
+      <input name="setting[project_type]" type="text" class="dfinput" value="{$project_type|default=''}" style="width:518px;" /><i>请添写标签类型，多个用|分隔，用于创建项目选择</i>
+    <i></i></li>
+    
+    <li>
+      <label>产品标志</label>
+      <input name="setting[product_mark]" type="text" class="dfinput" value="{$product_mark|default=''}" style="width:518px;" /><i>请添写产品标志，多个用|分隔，用于产品管理选择</i>
+    <i></i></li>
+    
+    <li>
+      <label>品牌</label>
+      <input name="setting[product_brand]" type="text" class="dfinput" value="{$product_brand|default=''}" style="width:518px;" /><i>请添写品牌，多个用|分隔，用于产品管理选择</i>
+    <i></i></li>
+    
+    <li>
+      <label>企业类型</label>
+      <input name="setting[com_type]" type="text" class="dfinput" value="{$com_type|default=''}" style="width:518px;" /><i>请添写企业类型，多个用|分隔，用于企业管理选择</i>
+    <i></i></li>
+    <li>
+      <label>&nbsp;</label>
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+  </ul>
+  </form>
+</div>

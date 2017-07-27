@@ -1,0 +1,74 @@
+<link href="../css/select.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+<script type="text/javascript" src="../js/select-ui.min.js"></script>
+<div class="formbody">
+  <div id="usual1" class="usual">
+    <div class="itab">
+      <ul>
+        <li><a href="#tab1">{$location}管理</a></li>
+        <li><a href="#tab2">添加{$location}</a></li>
+        {if $_a =='edit'}<li><a href="#tab3" class="selected">编辑{$location}</a></li>{/if}
+      </ul>
+    </div>
+    <div id="tab1" class="tabson">
+    <form method="get">
+      <ul class="seachform">
+        <li>
+          <label>综合查询</label>
+          <input name="kw" type="text" class="scinput" />
+        </li>
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="scbtn" value="查询"/>
+        </li>
+      </ul>
+     </form>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>编号</th>
+            <th>名称</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {if !empty($items)}
+        {foreach $items as $k=>$t}
+          <tr>
+            <td>{$t['qid']}</td>
+            <td>{$t['number']}</td>
+            <td>{$t['title']}</td>
+            <td>
+            	<a href="{:url('question/delete')}?qid={$t['qid']}" onclick="return confirm('您确定删除吗？')" class="tablelink"> 删除</a>
+                <a href="{:url('question/edit')}?qid={$t['qid']}" class="tablelink">编辑/查看</a>
+            </td>
+          </tr>
+        {/foreach}
+        {/if}
+        </tbody>
+      </table>
+      {if !empty($items)}
+      <div class="pagin">{$items->render()}</div>
+      {/if}
+    </div>
+    <div id="tab2" class="tabson">
+    <form method="post" action="{:url('question/add')}">
+    {:widget('common/from/show',['model'=>'question','act'=>'insert','data'=>$item])}
+    </form>
+    </div>
+    {if $_a =='edit'}
+    <div id="tab3" class="tabson">
+    <form method="post" action="{:url('question/edit')}">
+    {:widget('common/from/show',['model'=>'question','act'=>'insert','data'=>$item])}
+    </form>
+    </div>
+    {/if}
+  </div>
+  <script type="text/javascript"> 
+      $("#usual1 ul").idTabs(); 
+    </script> 
+  <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script> 
+</div>

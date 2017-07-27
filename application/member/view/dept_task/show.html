@@ -1,0 +1,88 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<?php if(isset($task))extract($task); ?>
+  <div class="title">
+  <style>
+    .myimg{
+      width:70px;
+    }
+    .pic{
+      width:100%;
+    }
+  </style>
+  <h2>项目信息-部门评审详情</h2></div>
+<div class="lieb_box">
+<div class="xmdbt"><center>{$title}</center></div>
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="sylbg" style="border:0px;">
+  <tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="4" class="sylbg_dd">基本信息</th>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th width="18%" align="center">项目名称</th>
+    <td width="82%" align="left" colspan="3">{$title}</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th width="18%" align="center">创建人(部门)</th>
+    <td width="82%" align="left" colspan="3"><a href="{:userinfo_url($userid)}" class="member">{$userinfo_ext}</a></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">项目类型</th>
+    <td align="left" width="32%">{$type|label_type}</td>
+    <th align="center" width="18%">所属产品</th>
+    <td align="left" width="32%">{$project_id|get_product_name}</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">所属模型</th>
+    <td align="left" width="32%"></td>
+    <th align="center" width="18%">创建时间</th>
+    <td align="left" width="32%">{$addtime|timetodate}</td>
+ </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">当前版本</th>
+    <td align="left" width="32%">V{$version}</td>
+    <th align="center" width="18%">当前状态</th>
+    <td align="left" width="32%">{$state|project_state_icon}</td>
+ </tr>
+    <tr bgcolor="#ffffff">
+    <th align="center">项目描述</th>
+    <td align="left" colspan="3">{$id|get_project_data}</td>
+  </tr>
+  </table>
+  <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="xmxq">
+  <tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="6" style="background-color:#e8f1f8">部门成员评审详情</th>
+  </tr>
+  <tr>
+    <th>项目评审人</th>
+    <th>评审状态</th>
+    <th>评审结果</th>
+    <th>分配时间</th>
+    <th>评审时间</th>
+    <th>评审详情/提醒</th>
+  </tr>
+  {foreach $review_list as $t}
+    <tr bgcolor="#ffffff">
+      <td align="center"><a class="member" href="{:userinfo_url($t['rev_userid'])}">{$t['realname']}</a></td>
+      <td align="center">
+         <span style="color:red">{$t['rev_state']|review_state}</span>
+      </td>
+      <td align="center">
+        <span style="color:red">{$t['rev_result_state']|review_result_state}</span>
+      </td>
+      <td align="center">
+        <span>{$t['rev_report_time']|timetodate}</span>
+      </td>
+      <td align="center">
+        <span style="color:#666">{$t['rev_addtime']|timetodate}</span>
+      </td>
+      <td align="center">
+        <a target="_blank" href="{:url('member/project/review_report')}?id={$t['project_id']}&revid={$t['revid']}">查看详情</a>
+      </td>
+    </tr>
+  {/foreach}
+  </table>
+<div class="pages"><input type="button" class="mybtn" value="返回" onclick="history.go(-1);"> </div>
+</div>
+<script type="text/javascript">
+$('.konwledge').addClass('curli');
+</script>

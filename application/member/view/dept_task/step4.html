@@ -1,0 +1,127 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>我的任务-&gt;上报部门评审意见</h2>
+</div>
+<div class="lieb_box">
+     <style>
+  .dybg th{ background-color:#e3eff6;height:40px;line-height:40px;font-size:14px;}
+  .dybg{overflow:hidden;margin-top:30px;line-height:30px;border:1px solid #c4c4c4;border-left:0px;font-size:14px;}
+  .dybg td,.dybg th{border:1px solid #c4c4c4;border-right:0px;border-bottom:0px;height:30px;}
+  .dybg td{padding-left:5px;}
+  .rimg{width:100%;}
+  .myimg{width:70px;}
+  #shangbao,.shangbao{
+    width:160px;
+    text-align: center;
+    display: block;
+    background: #3497DB;
+    height:35px;
+    line-height: 35px;
+    border-radius: 4px;
+    color: #fff;
+    margin:20px auto;
+    font-size: 14px;
+  }
+  </style>
+  <script>
+      $(function(){
+        //清空消息提醒人
+        $("#qkld").click(function(){
+          $("#ldid").val("");
+          $("#yxld").text("");
+        })
+        //上报判断
+        $("#shangbao").click(function(){
+          var ldid=$("#check_hid").val();
+          if(ldid){
+            return confirm('您选择了领导审批，需要领导审批后才能正式上报，请注意查看操作状态。确定继续吗？');
+          }else{
+            return confirm('您没有选择领导审批，部门报告将直接提交。确定继续吗？');
+          }
+        })
+      })
+  </script>
+  <?php extract($task_info); ?>
+  <table width="99%" cellpadding="0" cellspacing="0" class="dybg">
+    <tbody><tr bgcolor="#ffffff">
+      <th width="100%" align="center" colspan="4" style="border-top:0px;">部门评审报告</th>
+    </tr>
+    <tr bgcolor="#ffffff">
+      <th width="18%" align="center">项目名称</th>
+      <td width="82%" align="left" colspan="3">{$title} V{$version}</td>
+    </tr>
+    <tr bgcolor="#ffffff">
+      <th align="center" width="18%">标签评审负责人</th>
+      <td align="left" width="32%">{$userinfo_ext}</td>
+      <th align="center" width="18%">部门</th>
+      <td align="left" width="32%"></td>
+    </tr>
+    <tr bgcolor="#ffffff">
+      <th align="center" width="18%">评审时间</th>
+      <td align="left" width="32%">{$task_result_time|timetodate}</td>
+      <th align="center" width="18%">职务</th>
+      <td align="left" width="32%"></td>
+   </tr>
+    <tr bgcolor="#ffffff">
+      <th align="center" width="18%">评审结果</th>
+      <td align="left" width="32%">{$task_result_state|task_result_state_icon}</td>
+      <th align="center" width="18%">部门领导审批</th>
+      <td align="left" width="32%">
+        {if $task_check}{$check_result_state|task_result_state_icon}{else}无{/if}
+      </td>
+   </tr>    
+  </tbody></table>
+ 
+  
+	{if $task_state == TASK_STATE_SUM}
+    <form method="post">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+		<input type="hidden" name="taskid" value="{$taskid}">
+	  <tr class="mytr">
+        <td colspan="2">&nbsp;&nbsp;事务提醒</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+          <th>提醒方式</th>
+          <td>
+          	{foreach $notice_type_list as $k=>$t}
+            <input type="checkbox" name="notice_type[]" value="{$k}">&nbsp;{$t}&nbsp;&nbsp;&nbsp;
+            {/foreach}
+          </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+          <th>选择提醒人</th>
+          <td><input type="hidden" name="txrid" class="fc" size="50" id="yxid"><span id="yxren"></span>&nbsp;&nbsp;<a class="chose" href="{:url('member/ext/dept_member_list')}">[+选择]</a>&nbsp;<span style="color:#888;cursor:pointer" id="qingkong">[-清空]</span></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+          <th>提醒内容</th>
+          <td>
+             <textarea name="tx_content" id="tx_content" cols="100" rows="3">部门评审报告《{$title}》已经由部门标签评审负责人已经由部门标签评审负责人{$_realname}汇总完毕。请知悉</textarea>
+          </td>
+      </tr>
+      <tr class="mytr">
+        <td colspan="2">&nbsp;&nbsp;领导审批</td>
+      </tr>
+       <tr bgcolor="#ffffff">
+          <th>选择审批人</th>
+          <td><input type="hidden" name="check_users" class="fc" size="50" id="check_hid"><span id="check_sid"></span>&nbsp;&nbsp;<a class="chose" href="{:url('member/ext/dept_member_list')}?hid=check_hid&sid=check_sid">[+选择]</a>&nbsp;<span style="color:#888;cursor:pointer" id="qkld">[-清空]</span><span style="color:#999">(如果不需要审批则无需填写)</span></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th>会签内容</th>
+        <td>
+          <textarea name="hq_content" id="tarea">部门评审报告《{$title}》已经由部门标签评审负责人{$_realname}汇总完毕。请您审批</textarea>
+        </td>
+      </tr>
+	</table>
+    <input type="submit" id="shangbao" name="submit" value="提交">
+    </form>
+    {else}
+    <form method="post">
+      <input type="hidden" name="taskid" value="{$taskid}">
+      <input type="submit" class="shangbao" name="submit" value="提交">
+  	</form>
+	{/if}
+</div>
+<script>
+$('.konwledge').addClass('curli');
+</script>

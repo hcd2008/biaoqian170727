@@ -1,0 +1,41 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title">
+    <h2>自定义流程</h2>
+  </div>
+<div class="query" style="border-bottom:0px;">
+<div class="search">
+  <form id="foodmate_search">
+    <input name="kw" type="text" class="sousuo" value="{$kw|default='请输入关键词'}" onfocus="if(this.value=='请输入关键词') this.value='';" onkeyup="STip(this.value);">
+    <input class="search_s" type="submit" value=" ">
+    <input type="button" class="mybtn" style="float:right;margin-right:10px;" onClick="window.location='{:url('member/diy/edit')}'"  value="添加流程">
+  </form>
+</div>
+</div>
+  <div class="lieb_box">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="bmgz wdwmbg" style="border:0px;">
+	<tr>
+      <!-- <th width="10%">ID</th> -->
+      <th width="30%">流程名称</th>
+      <th width="10%">环节数量</th>
+      <th width="15%">添加时间</th>
+      <th>操作</th>
+	</tr>
+	{foreach $items as $t}
+    <tr bgcolor="#fff">
+    	<!-- <td align="center">{$t['diy_id']}</td> -->
+        <td>{$t['diy_title']}</td>
+        <td align="center">{$t['count']}</td>
+        <td align="center">{$t['diy_addtime']|timetodate}</td>
+        <td align="center">
+            <a href="{:url('member/diy/delete')}?id={$t['diy_id']}" onclick="return confirm('您确定删除吗？')">删除</a>
+            <a href="{:url('member/diy/edit')}?id={$t['diy_id']}">编辑/查看</a>
+        </td>
+    </tr>
+    {/foreach}
+
+    </table>
+  </div> 
+<script type="text/javascript">
+$('.system').addClass('curli');
+</script>  

@@ -1,0 +1,154 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+  <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="jqueryui/style.css">
+  <style>
+  .cjxm ul { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; background: #eee; padding: 15px; width: 85px;text-align:center;}
+  .cjxm ul li { margin: 2px; padding: 2px; font-size: 12px; width: 70px; }
+  </style>
+  <script>
+  $(function() {
+	/*
+    $( "ul.droptrue" ).sortable({
+      connectWith: "ul"
+    });
+ 
+    $( "ul.dropfalse" ).sortable({
+      connectWith: "ul",
+      dropOnEmpty: false
+    });
+	*/ 
+    //$( "#sortable1, #sortable2, #sortable3").disableSelection();
+	
+	$( ".ui-sortable").sortable({connectWith: "ul",items: "li:not(.ui-state-disabled)"}).disableSelection();
+	/*
+	$( ".ui-sortable" ).on( "sortreceive", function( event, ui ) {
+		_id = this.id;
+		_step = $(this).attr('step-id');
+		_obj = {};
+		_val_dept = $( "#"+_id ).sortable( "toArray" ,{attribute:"data-dept"});
+		_val_user = $( "#"+_id ).sortable( "toArray" ,{attribute:"data-user"});
+		_obj.dept = _val_dept;
+		_obj.user = _val_user;
+		_data[_step] = _obj;
+		//_data.push(_val);
+		
+		console.log(_data)
+	} );
+	*/
+  });
+	function Dcheck(){
+		var _data ={};
+		$( ".step").each(function(i,o){
+			_obj = {};
+			_step = $(this).attr('step-id');
+			_obj.depts = $(o).sortable( "toArray" ,{attribute:"data-dept"});
+			_obj.users = $(o).sortable( "toArray" ,{attribute:"data-user"});
+      _obj.depts = array2str(_obj.depts)
+      _obj.users = array2str(_obj.users)
+      
+      if(_obj.depts.length==0 && _obj.users.length==0){
+        return false;
+      } 
+      _data[_step] =  _obj;
+		});
+    if (isEmptyObject(_data)) {
+      alert('请拖拽流程...');
+      return false;
+    }
+    console.log(_data);
+		$('#diy_content').val(JSON.stringify(_data));
+		return true;  
+	}
+
+  function isEmptyObject(obj) {
+    for (var key in obj) {
+      return false;
+    }
+    return true;
+  }
+
+  function array2str(arr){
+    var tmp=[];
+    for(key in arr){
+        if(arr[key]){
+          tmp.push(arr[key])
+        }
+    }
+    return tmp;
+  }
+  </script>
+<div id="right">
+  <div class="title" style="border-bottom:0px;">
+    <h2>自定义流程设置</h2>
+  </div>
+  <form id="form1" name="form1" method="post" action="" onSubmit="return Dcheck();">
+    <input type="hidden" name="diy_content" id="diy_content">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+    <tbody>
+    
+    </tbody>
+    
+    <tbody id="mode_adv" style="display:;">
+    	<tr bgcolor="#ffffff" class="list_row">
+    		<td>流程名称</td>
+    		<td>
+    			<input name="diy_title" type="text" id="diy_title" size="50" class="fc" value="">
+    		</td>
+    	</tr>
+    	<tr bgcolor="#ffffff" class="list_row">
+    		<td></td>
+    		<td>
+    			请将评审部门或评审员拖拽到下列方框内
+    		</td>
+    	</tr>
+        <?php for($i=1;$i<=10;$i++){ ?>
+        <tr bgcolor="#ffffff" class="list_row {if $i>5}hide{/if}">
+        	<td>流程{$i}</td>
+            <td>
+            	<ul step-id={$i} id="sortable{$i}" class="droptrue ui-sortable step"></ul>
+            	
+            </td>
+        </tr>
+       	<?php } ?>
+        <tr bgcolor="#ffffff">
+        	<td colspan="2" align="center">
+            	<input name="" type="button" onClick="$('.list_row').show();$(this).parents('tr').hide();" value="显示全部流程">
+            </td>
+        </tr>
+        <tr bgcolor="#ffffff">
+        	<td>评审部门</td>
+            <td>
+            {foreach $dept_group_list as $group}
+            	<ul id="sortable99" class="droptrue ui-sortable">
+                  <li class="ui-state-default" data-dept="{$group['depid']}">{$group['dept_name']}</li>
+                </ul>
+            {/foreach}
+            </td>
+        </tr>
+        <tr bgcolor="#ffffff">
+        	<td>评审员</td>
+            <td>
+            {foreach $dept_group_list as $group}
+            	<ul id="sortable100" class="droptrue ui-sortable">
+                  <li class="ui-state-disabled">{$group['dept_name']}</li>
+                  {if !empty($group['member_list'])}
+                  {foreach $group['member_list'] as $k=>$t}
+                  <li class="ui-state-default" data-user="{$t['userid']}">{$t['realname']}</li>
+                  {/foreach}
+                  {/if}
+                </ul>
+            {/foreach}
+            </td>
+        </tr>
+    </tbody>
+    <tbody>
+    	
+    </tbody>
+    </table>
+     <div class="pages"><input name="submit" type="submit" class="mybtn" value="保存"> </div>
+  </form>
+</div>
+</script>

@@ -1,0 +1,95 @@
+      .right_info{
+        z-index: 9999;
+        position: fixed;
+        right:0;
+        top:200px;
+      }
+      .right_info button{
+        margin:0;
+        padding:0;
+        position: relative;
+        margin-bottom: 5px;
+        height:105px;
+        display: block;
+        width:40px;
+        text-align: center;
+      }
+      .psbg{
+        width:650px;
+        z-index: 9999;
+        position: fixed;
+        right:40px;
+        top:200px;
+      }
+      .xmxx{
+        width:500px;
+        z-index: 9999;
+        position: fixed;
+        right:40px;
+        top:200px;
+      }
+       .help{
+        z-index: 9999;
+        position: fixed;
+        right:40px;
+        top:100px;
+      }
+      .help{
+        width:500px;
+        display: none;
+      }
+      .helptb{
+        font-size: 12px;
+        width:100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+      .helptb td,.helptb th{
+        padding:5px;
+        border:1px solid #ccc;
+        text-align: center;
+      }
+      #close{
+        text-align: right;
+      }
+      #resinfo{
+        padding:20px;
+        border-radius: 3px;
+        width:800px;
+        font-size: 13px;
+        position: absolute;
+        top:200px;
+        left:400px;
+        z-index: 999;
+        background: #eee;
+        display: none;
+        border:1px solid #ccc;
+      }
+      #resinfo input{
+        border:1px solid #ccc;
+        height:25px;
+        line-height: 25px;
+      }
+      #resinfo ul li{
+        margin:10px;
+      }
+      #queding{
+        display: block;
+        margin:0 auto;
+        width:50px;
+        text-align: center;
+        height:25px;
+        line-height: 25px;
+        background: #eee;
+        border-radius: 3px;
+        border:1px solid #999;
+        padding:0;
+        cursor: pointer;
+      }
+      #queding:hover{
+        background: #ccc;
+      }
+      ul li{
+        list-style: none;
+      }
+      

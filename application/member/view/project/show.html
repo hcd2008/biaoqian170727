@@ -1,0 +1,174 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<?php if(isset($project_detail))extract($project_detail); ?>
+  <div class="title">
+  <style>
+    .myimg{
+      width:70px;
+    }
+    .pic{
+      width:100%;
+    }
+  </style>
+  <h2>项目信息</h2></div>
+<div class="lieb_box">
+<div class="xmdbt"><center>{$title}</center></div>
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="sylbg" style="border:0px;">
+  <tbody><tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="4" class="sylbg_dd">基本信息</th>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th width="18%" align="center">项目名称</th>
+    <td width="82%" align="left" colspan="3">{$title}</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th width="18%" align="center">创建人(部门)</th>
+    <td width="82%" align="left" colspan="3"><a href="{:userinfo_url($userid)}" class="member">{$userinfo_ext}</a></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">项目类型</th>
+    <td align="left" width="32%">{$type|label_type}</td>
+    <th align="center" width="18%">所属产品</th>
+    <td align="left" width="32%">{$product_id|get_product_name}</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">所属模型</th>
+    <td align="left" width="32%"></td>
+    <th align="center" width="18%">创建时间</th>
+    <td align="left" width="32%">{$addtime|timetodate}</td>
+ </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">当前版本</th>
+    <td align="left" width="32%">V{$version}</td>
+    <th align="center" width="18%">当前状态</th>
+    <td align="left" width="32%">{$state|project_state_icon}</td>
+ </tr>
+    <tr bgcolor="#ffffff">
+    <th align="center">项目描述</th>
+    <td align="left" colspan="3">{$id|get_project_data}</td>
+  </tr>
+</table>
+{if $diy_id}
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="xmxq" style="border:0px;">
+	<tr>
+    <th width="20%">部门/个人</th>
+    <th width="20%">评审状态</th>
+    <th width="20%">评审结果</th>
+    <th width="15%">分配时间</th>
+    <th width="15%">提交时间</th>
+    <th width="">查看详情</th>
+ 	</tr>
+  {foreach $task_list as $step=>$t}
+  <tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="8" class="sylbg_dd">流程{$step}{if $state==1 && $diy_step==$step}【当前环节】{/if}</th>
+  </tr>
+  {foreach $t['depts'] as $r}
+  {if $t['status'] == 0}
+  <tr bgcolor="#ffffff"> 
+     <td align="center">{$r['dept_name']}</td>
+     <td align="center">等待上一环节完成</td>
+     <td align="center"></td>
+     <td align="center"></td>
+     <td align="center"></td>
+     <td align="center"></td>
+  </tr>
+  {else}
+  <tr bgcolor="#ffffff"> 
+     <td align="center">{$r['dept_name']}</td>
+     <td align="center">{$r['task_state']|project_task_state}</td>
+     <td align="center">{$r['task_result_state']|dept_task_result_state}</td>
+     <td align="center">{$r['task_addtime']|timetodate}</td>
+     <td align="center">{$r['task_result_time']|timetodate}</td>
+     <td align="center"><a href="{:url('member/deptTask/show')}?taskid={$r['taskid']}">查看详情</a></td>
+  </tr>
+  {/if}
+  {/foreach}
+  
+  {foreach $t['users'] as $r}
+  {if $t['status'] == 0}
+  <tr bgcolor="#ffffff">
+      <td align="center"><a href="{:userinfo_url($r['userid'])}" class="member">{$r['realname']}</a></td>
+      <td align="center">等待上一环节完成</td>
+      <td align="center"></td>
+      <td align="center"></td>
+      <td align="center"></td>
+      <td></td>
+  </tr>
+  {else}
+  <tr bgcolor="#ffffff">
+      <td align="center"><a href="{:userinfo_url($r['rev_userid'])}" class="member">{$r['realname']}</a></td>
+      <td align="center">{$r['rev_state']|review_state}</td>
+      <td align="center">{$r['rev_result_state']|review_result_state}</td>
+      <td align="center">{$r['rev_addtime']|timetodate}</td>
+      <td align="center">{$r['rev_report_time']|timetodate}</td>
+      <td align="center"><a target="_blank" href="{:url('member/project/review_report')}?id={$r['project_id']}&revid={$r['revid']}">查看详情</a></td>
+  </tr>
+  {/if}
+  {/foreach}
+  {/foreach}
+</table>
+
+{else}
+{if $dept_task_list}
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="xmxq" style="border:0px;">
+  <tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="7" class="xm_dd">部门 - 评审进度</th>
+  </tr>
+  <tr>
+    <th width="10%">部门</th>
+    <th width="10%">评审负责人</th>
+    <th width="10%">评审状态</th>
+    <th width="10%">评审结果</th>
+    <th width="15%">提交时间</th>
+    <th width="25%">发送提醒</th>
+    <th width="20%">查看详情</th>
+  </tr>
+  {foreach $dept_task_list as $t}
+  <tr bgcolor="#ffffff">
+      <td align="center">{$t['dept_name']}</td>
+      <td align="center"><a href="{:userinfo_url($t['userid'])}" class="member">{$t['realname']}</a></td>
+      <td align="center">{$t['task_state']|project_task_state}</td>
+      <td align="center">{$t['task_result_state']|dept_task_result_state}</td>
+      <td align="center">{$t['task_result_time']|timetodate}</td>
+      <td align="center"><a class="fstx" href="{:url('member/ext/send_message',['id'=>$t['project_id'],'userid'=>$t['task_userid']])}">发送提醒</a></td>
+      <td></td>
+  </tr>
+  {/foreach}
+</table>
+{/if}
+{if $task_list}
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="xmxq" style="border:0px;">
+  <tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="7" class="xm_dd">个人 - 评审进度</th>
+  </tr>
+  <tr>
+    <th width="10%">部门</th>
+    <th width="10%">评审员</th>
+    <th width="10%">评审状态</th>
+    <th width="10%">评审结果</th>
+    <th width="15%">提交时间</th>
+    <th width="25%">发送提醒</th>
+    <th width="20%">查看详情</th>
+  </tr>
+  {foreach  $task_list as $t}
+  <tr bgcolor="#ffffff">
+      <td align="center">{$t['dept_name']}</td>
+      <td align="center"><a href="{:userinfo_url($t['rev_userid'])}" class="member">{$t['realname']}</a></td>
+      <td align="center">{$t['rev_state']|review_state}</td>
+      <td align="center">{$t['rev_result_state']|review_result_state}</td>
+      <td align="center">{$t['rev_report_time']|timetodate}</td>
+      <td align="center"><a class="fstx" href="{:url('member/ext/send_message',['id'=>$t['project_id'],'userid'=>$t['rev_userid']])}">发送提醒</a></td>
+      <td></td>
+  </tr>
+  {/foreach}
+</table>
+{/if}
+{/if}
+<!-- <div class="pages"><input type="button" class="mybtn" value="返回" onclick="history.go(-1);"> </div>
+ --></div>
+<div style="position: absolute;top: 50%; left: 50%;">
+<img src="__ASSETS__/image/stamp/{if $state==1}review{elseif $state==2}stop{elseif $state==3}{if $result_state==20}pass{else}reject{/if}{/if}.png"/>
+</div>
+<script type="text/javascript">
+$('.wdxml ').addClass('curli');
+</script>

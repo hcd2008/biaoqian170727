@@ -1,0 +1,53 @@
+{layout name="layout" /}
+<div class="xmtou">
+  <h2>我的任务-&gt;上报部门评审意见-&gt;自动汇总</h2>
+</div>
+<script>
+$(function(){
+$(".delimg").click(function(){
+var res=confirm('确定删除吗？');
+if(res){
+$(this).parents(".tr").remove();
+}else{
+return false;
+}
+})
+})
+</script>
+<style>
+.delimg{
+cursor: pointer;
+}
+.pictb{
+width:100%;
+border-collapse: collapse;
+}
+.pictb td{
+border:1px solid #777;
+}
+.piccontainer{
+height:300px;
+overflow: auto;
+}
+</style>
+<div class="lieb_box">
+<form method="post">
+<input type="hidden" name="taskid" value="{$taskid}">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+<tbody><tr bgcolor="#fff">
+<th width="15%">部门评审结果：</th>
+<td><input type="radio" name="task_result_state" value="1">通过审核&nbsp;&nbsp;<input type="radio" name="task_result_state" value="0" >拒绝通过</td>
+</tr>
+<tr bgcolor="#fff">
+<th>部门评审意见：</th>
+<td>
+{foreach $review_list as $t}
+<a target="_blank" href="{:url('task/report_detail')}?revid={$t['revid']}">{$t['realname']}</a>&nbsp;&nbsp;
+{/foreach}
+</td>
+</tr>
+</tbody></table>
+<p style="height:30px;line-height:30px;color:#666">提醒：点击用户名，编辑该用户名的评审信息</p>
+<div class="pages"><input name="submit" type="submit" class="mybtn" value="提交"> </div>
+</form>
+</div>

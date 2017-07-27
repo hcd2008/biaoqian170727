@@ -1,0 +1,1 @@
+var DTPath = "http://label2.foodmate.pw/";var SKPath = "http://label2.foodmate.pw/skin/default/";var MEPath = "http://label2.foodmate.pw/member/";var EXPath = "http://label2.foodmate.pw/extend/";var CKDomain = "";var CKPath = "/";var CKPrex = "cjt_";

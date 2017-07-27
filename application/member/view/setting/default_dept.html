@@ -1,0 +1,29 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>控制面板</h2>
+</div>
+<form id="form1" name="form1" method="post">
+  <div class="pub_box">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" style="border:0px;" class="cjxm">
+      <tr class="mytr">
+        <td colspan="2" class="cj_dbt">设置标签评审默认下发部门</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center" style="background-color:#ffffff;">部门列表</th>
+        <td width="82%" align="left">
+          {foreach $member_list as $k=>$t}
+          <input type="checkbox" name="users[]" value="{$t['userid']}" {if in_array($t['userid'],$users)}checked="checked"{/if}>
+          &nbsp;{$t['realname']}({$t['dept_name']})&nbsp;&nbsp;<br>
+          {/foreach}
+        </td>
+      </tr>
+    </table>
+    <div class="pages">
+      <input type="submit" class="mybtn" value="设置">
+    </div>
+  </div>
+</form>
+<script type="text/javascript">
+$('.system').addClass('curli');
+</script>

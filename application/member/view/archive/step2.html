@@ -1,0 +1,93 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>标签存档</h2>
+</div>
+<div class="lieb_box">
+  <h3>新建标签存档</h3>
+  <form method="post">
+  	<input type="hidden" name="id" value="{$project_info.id}">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="sylbg" style="border:0px;">
+      <tbody>
+        <tr bgcolor="#ffffff">
+          <th width="18%" align="center">项目名称</th>
+          <td width="82%" align="left">{$project_info.title}</td>
+        </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">版本</th>
+        <td width="82%" align="left">V{$project_info.version}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">归档类型</th>
+        <td width="82%" align="left">新标签</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">标签名称</th>
+        <td width="82%" align="left"><input type="text" name="arc_title" class="fc" size="60" value="{$project_info.title}"></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">版本号</th>
+        <td width="82%" align="left"><input type="text" name="arc_version" class="fc" size="20" value="{$project_info.version}"></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">启用日期</th>
+        <td align="left">
+          <input type="text" name="arc_enabledate" id="enabledate" value="" size="20" onFocus="WdatePicker({isShowClear:true,readOnly:true})" class="fc Wdate">
+        </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">标签文件</th>
+        <td align="left">
+        <a class="bgpic" href="{$project_info.bqfile}">{$project_info.bqfile}</a>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">所属产品</th>
+        <td align="left">
+        <select name="arc_pid" id="pid" class="fc">
+          <option value="20">HCD测试食品</option>
+          <option value="5">牛奶巧克力</option>
+          <option value="4">好粥道老婆饼</option>
+          <option value="3">花生牛奶</option>
+          <option value="2">牛奶</option>
+          <option value="1">椰子奶</option>
+        </select>
+        </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">所属模型</th>
+        <td align="left">
+        <select name="arc_mid" id="mid" class="fc">
+            <option value="7" selected="selected">充气包装</option>
+            <option value="6" selected="selected">普通瓦楞纸箱</option>
+            <option value="4" selected="selected">瓶标</option>
+            <option value="3" selected="selected">单缩颈罐标</option>
+            <option value="1" selected="selected">利乐包</option>
+        </select>
+        </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">规格型号</th>
+        <td width="82%" align="left"><input type="text" name="arc_specs" class="fc" size="30" value=""></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">备注</th>
+        <td width="82%" align="left"><input type="text" name="arc_remak" class="fc" size="60"></td>
+      </tr>
+        </tbody>
+    </table>
+    <div class="pages">
+      <input type="submit"  id="tijiao" class="mybtn" value="存档">
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $('#tijiao').click(function(){
+   var enabledate=$("#enabledate").val();
+   if(enabledate==''){
+      alert("请填写启用时间！");
+	  return false;
+   }
+   return true;
+   
+});
+</script>

@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#ps {
+    padding-top: 120px;
+    padding-left: 20px;
+    position: relative;
+}
+
+#ps .tool {
+    height: 57px;
+    line-height: 57px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 9;
+    background: #535353;
+}
+
+#ps .tool > div {
+    font-size: 16px;
+    padding-left:6px;
+    padding-right: 6px;
+    height: 50px;
+    line-height: 50px;
+    margin: 0 5px;
+    float: left;
+    cursor: pointer;
+}
+#ps .tool > div img{
+    padding-top: 12.5px;
+    /*border:1px solid red;*/
+
+}
+
+#ps input,#ps select {
+    width: 50px;
+    height: 20px;
+}
+
+#ps .board {
+    position: relative;
+    transform: scale(1);
+    cursor: default;
+    border: 1px solid black;
+}
+
+#ps .board canvas {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#canvasfon {
+    z-index: 1;
+}
+
+#canvasrule {
+    z-index: 2;
+}
+
+#canvascur {
+    z-index: 3;
+}
+
+#canvasruley {
+    z-index: 4;
+    position: fixed;
+    left: 0;
+    top: 120px;
+    display: none;
+}
+
+#canvasrulex {
+    z-index: 5;
+    position: fixed;
+    left: 0;
+    top: 100px;
+    display: none;
+}
+
+#clipBtn {
+    display: none;
+}
+
+.sylbg{
+    font-size: 13px;
+}
+.sylbg td{
+    padding:5px;
+}
+.dangqian{
+  background: #ccc;
+}
+#tasklist{
+    position: fixed;
+    bottom: 10px;
+    left:50px;
+}
+#tasklist .tasktb{
+    border-collapse: collapse;
+}
+#tasklist .tasktb td{
+    padding:10px;
+
+}
+.dqfile{
+    background: #eee;
+    border:1px solid #ccc;
+}
+.psstate{
+    text-align: center;
+    font-size: 13px;
+
+}
+.red{
+    color:red;
+}
+.tongguo{
+    color:green;
+}
+.jujue{
+    color:red;
+}
+.xiazai{
+    font-size: 13px;
+    text-decoration: none;
+    color:#777;
+}
+.shangchuan{
+    font-size: 13px;
+    text-decoration: none;
+    color:green;
+}

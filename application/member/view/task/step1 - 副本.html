@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <title>标签评审</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="__ASSETS__/label/css/ps.css">
+    <link rel="stylesheet" href="__ASSETS__/label/css/style.css">
+</head>
+
+<body>
+<?php extract($project_info); ?>
+    <div id="ps">
+        <input type="hidden" id="myimg" value="{$pic}">
+        <div class="tool">
+            <div id="fangdajing" ><img src="__ASSETS__/label/img/fd.png" width="25" height="25" title="放大镜"></div>
+            <div id="quse"><img src="__ASSETS__/label/img/qsq.png" width="25" height="25" title="取色器"></div>
+            <div id="buguize"><img src="__ASSETS__/label/img/bgzbz.png" width="25" height="25" title="不规则标注"></div>
+            <div id="zhixian"><img src="__ASSETS__/label/img/zxbz.png" width="25" height="25" title="直线标注"></div>
+            <div id="juxing"><img src="__ASSETS__/label/img/jxbz.png" width="25" height="25" title="矩形标注">  </div>
+            <div id="yuanxing"><img src="__ASSETS__/label/img/yxbz.png" width="25" height="25" title="圆形标注"></div>
+            <div id="wenzi"><img src="__ASSETS__/label/img/wz.png" width="25" height="25" title="文字"></div>
+            <div id="danxian"><img src="__ASSETS__/label/img/xcl.png" width="25" height="25" title="单线测量"></div>
+            <div id="juxingceliang"><img src="__ASSETS__/label/img/jxcl.png" width="25" height="25"  title="矩形测量"></div>
+            <div id="tuodong"><img src="__ASSETS__/label/img/td.png" width="25" height="25" title="拖动"></div>
+            <div id="fangda"><img src="__ASSETS__/label/img/fdj.png" width="25" height="25" title="放大(+)"></div>
+            <div id="suoxiao"><img src="__ASSETS__/label/img/sx.png" width="25" height="25" title="缩小(-)"></div>
+            <div id="huanyuan"><img src="__ASSETS__/label/img/hy.png" width="25" height="25" title="还原图片100%大小"></div>
+            <div id="shunshizhen"><img src="__ASSETS__/label/img/ssz.png" width="25" height="23" title="顺时针旋转90°"></div>
+            <div id="nishizhen"><img src="__ASSETS__/label/img/nsz.png" width="25" height="23" title="逆时针旋转90°"></div>
+            <div>
+              <select id="cuxi" title="文字粗细">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div>
+              <select id="xingzhuang" title="形状">
+                    <option value="" selected>请选择形状</option>
+                    <option value="xz0">不规则</option>
+                    <option value="xz1">直线</option>
+                    <option value="xz2">矩形</option>
+                    <option value="xz3">圆形</option>
+                    <option value="xz4">三角形</option>
+                    <option value="xz5">实心矩形</option>
+                    <option value="xz6">实心圆形</option>
+                    <option value="xz7">实心三角形</option>
+                </select>
+            </div>
+            <div><input id="xiantiaose" type="color" title="图形颜色"></div>
+            <div><input id="biaozhuse" type="color" value="#0C08F7" title="标注背景色"></div>
+            <div><input id="wenzise" type="color" title="文字颜色"></div>
+            <div>
+            
+              <select id="zihao" title="字号">
+                    <option value="20" selected>20</option>
+                    <option value="22">22</option>
+                    <option value="24">24</option>
+                    <option value="26">26</option>
+                    <option value="28">28</option>
+                    <option value="36">36</option>
+                    <option value="48">48</option>
+                    <option value="72">72</option>
+                </select>
+            </div>
+            <div id="fanhui"><img src="__ASSETS__/label/img/fh.png" width="25" height="25" title="返回([)"></div>
+            <div id="chexiao"><img src="__ASSETS__/label/img/cx.png" width="25" height="25" title="撤销(])"></div>
+            <div id="biaochi"><img src="__ASSETS__/label/img/bc.png" width="25" height="25" title="标尺"></div>
+            <div id="cankaoxian"><img src="__ASSETS__/label/img/ckx.png" width="25" height="25" title="参考线"></div>
+            <div id="cankaoxian_hide"><img src="__ASSETS__/label/img/ycckx.png" width="25" height="25" title="隐藏参考线"></div>
+            <div><a href="{$pic}"><img src="__ASSETS__/label/img/bcdbd.png" width="25" height="25" title="保存到本地"></a></div>
+            <?php if(count($bb)){ ?>
+            <div><button type="button" class="bdgn">版本比对</button>
+                <div class="bdgnc" style="display:none">
+                          <form id="form1" name="form1" action="<?php echo url("member/task/compare"); ?>" method="post" onSubmit="return check_bd();">
+                 <input type="hidden" name="file" id="file" value="compare" />
+                <input type="hidden" name="xmid" id="xmid" value="{$revid}" />
+
+
+                <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+                <?php
+                 foreach ($bb as $k => $v) {
+                  # code...
+                ?>
+                  <tr bgcolor="#ffffff">
+                    <td><input name="lv[]" id="lv" type="checkbox" value="{$v[id]}">&nbsp;V{$v['version']}</td>
+                  </tr>
+                 <?php } ?>
+                   <tr bgcolor="#ffffff">
+                    <td><input type="submit" name="submit" value="提交" /></td>
+                  </tr>
+                </table>
+                </form>
+                <script language="javascript">
+                function check_bd(){
+                  if($("input[name='lv[]']:checked").length !=2){
+                    alert("{$L['xz_label_bd']}");
+                    return false;
+                  }
+                }
+                </script>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+        <div class="board">
+            <canvas id="canvasfon"></canvas>
+            <canvas id="canvasrule"></canvas>
+            <canvas id="canvascur"></canvas>
+        </div>
+        <canvas id="canvasrulex"></canvas>
+        <canvas id="canvasruley"></canvas>
+        <button type="button" id="clipBtn"></button>
+    </div>
+    <script src="__ASSETS__/label/bower_components/clipboard/dist/clipboard.min.js" type="text/javascript"></script>
+    <script src="__ASSETS__/label/bower_components/exif-js/exif.js" type="text/javascript"></script>
+    <script src="__ASSETS__/label/js/tool.js" type="text/javascript"></script>
+    <script src="__ASSETS__/label/js/ps.js" type="text/javascript"></script>
+
+    <div class="right_info">
+      <button type="button" class="psbgn" style="width:40px;">评<br>审<br>状<br>态</button>
+      <button type="button" class="xmxxn" style="width:40px;">项<br>目<br>信<br>息</button>
+      <button type="button" class="helpbtn" style="width:40px;">帮<br>助<br>说<br>明</button>
+    </div>
+    <div class="psbg" style="display:none">
+        <form id="form1" name="form1">
+         <input type="hidden" name="lid" id="lid" value="{$id}" />
+        <input type="hidden" name="xmid" id="xmid" value="{$revid}" />
+        <input type="hidden" name="js" id="js" value="{$js}" />
+        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+         <!--  <tr bgcolor="#ffffff">
+            <th width="35%" align="center">评审意见</th>
+            <td width="65%" align="left" style="padding:10px;"><textarea name="info" cols="50" rows="5" id="info" class="fc">{$content}</textarea></td>
+          </tr> -->
+          <tr bgcolor="#ffffff">
+            <th width="25%" align="center" style="padding:10px;">评审结果</th>
+            <td align="left" style="padding:10px;"><input name="result" checked="checked" type="radio" value="1" id="result" />通过审核&nbsp;&nbsp;<input id="result" name="result" type="radio" value="0" />拒绝通过</td>
+          </tr>
+          <tr bgcolor="#ffffff">
+            <td colspan=2><input name="button" type="button" value="提交" src="{FM_SKIN}image/tijiao.jpg" style="margin-top:5px;margin-left:40%;" id="submit_result" /><br></td>
+          </tr>
+        </table>
+        
+        </form>
+      </div>
+      <div class="xmxx" style="display:none">
+          <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+            <tr bgcolor="#ffffff">
+              <th width="18%" align="center">项目名称</th>
+              <td width="82%" align="left" style="padding:10px;">{$info[xmname]}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">项目类型</th>
+              <td align="left">{if $info[xmtype]==1}食品标签{else}海报广告{/if}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">所属产品</th>
+              <td align="left"><!--{php $cps=get_product($info[pid]);echo $cps[proname]}--></td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">所属模型</th>
+              <td align="left"><!--{php $mds=get_model($info[mid]);echo $mds[model_name]}--></td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">创建时间</th>
+              <td align="left">{date("Y-m-d H:i:s",$info[addtime])}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">当前版本</th>
+              <td align="left">{if $v}V{$v}{/if}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">项目描述</th>
+              <td align="left">{$info[xmdesc]}</td>
+            </tr>
+          </table>
+      </div>
+      <div class="help">
+        <div class="helptb">
+          将鼠标放在工具图标上即可显示该工具的用途描述。
+        </div>
+      </div>
+       <div id="resinfo">
+          <p id="close">x</p>
+          <ul>
+          <li>
+            问题类型:
+             <select name="qctype" id="qctype">
+              <?php foreach ($question_type as $k => $v) {
+                echo "<option value='".$k."'>".$v."</option>";
+              } ?>
+            </select>
+          </li>
+          <li>
+            区域性问题分类:
+            <select name="qarea" id="qarea">
+              <?php foreach ($question_area as $k => $v) {
+                echo "<option value='".$k."'>".$v."</option>";
+              } ?>
+            </select>
+          </li>
+          
+          <li>问题描述：<input type="text" name="qdesc" id="qdesc" size=60>
+          </li>
+          <li>
+            法规依据：<input type="text" name="yiju" id="yiju" size=60>
+          </li>
+          <li>详细信息：
+            <!-- 加载编辑器的容器 -->
+             <script id="xiangqing" name="content" type="text/plain">
+                 
+             </script>
+            <script type="text/javascript" src="__ASSETS__/script/ueditor/ueditor.config.js"></script>
+             <!-- 编辑器源码文件 -->
+             <script type="text/javascript" src="__ASSETS__/script/ueditor/ueditor.all.js"></script>
+             <!-- 实例化编辑器 -->
+             <script type="text/javascript">
+                 var ue = UE.getEditor('xiangqing');
+             </script>
+          </li>
+          <li><span id="queding">确定</span></li>
+        </ul>
+        </div>
+        <script type="text/javascript" src="__ASSETS__/label_tools/js/jquery.min.js"></script>
+        <script type="text/javascript">
+        var revid = '{$revid}';
+        var proid = '{$id}';
+        var base64_data = '';
+        var rev_state = 0;
+        var url = "{:url('member/task/step2')}"
+        $(function(){
+          $('#submit_result').click(function(){
+            var canvas = document.getElementById('canvasfon');;
+            base64_data = canvas.toDataURL();
+            rev_state = $("input[name='result']:checked").val();
+            $.post(url,{proid:proid,revid:revid,rev_state:rev_state,base64_data:base64_data},function(data){
+              alert(data.msg)
+              window.location.href = "{:url('member/task/index')}";
+            });
+          });
+        })
+        </script>
+        <script>
+          function clear_from(){
+             $('#qdesc').val('');
+              $('#yiju').val('');
+              $('#qarea option').eq(0).attr("selected",true);
+              $('#qctype option').eq(0).attr("selected",true);
+              UE.getEditor('xiangqing').setContent('');
+
+          }
+              $(function(){
+                $("#close").click(function(){
+                  $("#resinfo").hide();
+                  clear_from();
+                })
+                $("#queding").click(function(){
+                    var qdesc=$("#qdesc").val();
+                    var yiju=$("#yiju").val();
+                    var qctype=$("#qctype").val();
+                    var qarea=$("#qarea").val();
+                    var xiangqing=ue.getContent();
+                    var revid="{$revid}";
+                    var url="{:url('member/task/question_add')}";
+                    $.post(url,{qdesc:qdesc,qctype:qctype,qarea:qarea,xiangqing:xiangqing,yiju:yiju,revid:revid},function(data){
+                        alert(data.msg);
+                    });
+                    clear_from();
+                    $("#resinfo").hide();
+                })
+                $(".bdgn").click(function(event){
+                  $(".bdgnc").toggle();
+                  });
+                $(".psbgn").click(function(){
+                    $(".psbg").toggle();
+                    //隐藏其他子菜单
+                    $(".xmxx").hide();
+                    $(".help").hide();
+                })
+                $(".xmxxn").click(function(){
+                    $(".xmxx").toggle();
+                    //隐藏其他子菜单
+                    $(".psbg").hide();
+                    $(".help").hide();
+                })
+                $(".helpbtn").click(function(){
+                    $(".help").toggle();
+                    //隐藏其他子菜单
+                    $(".xmxx").hide();
+                    $(".psbg").hide();
+                })
+                $(".tool div").click(function(){
+                    $(".tool div").removeClass("dangqian");
+                    $(this).addClass("dangqian");
+                })
+              })
+            </script>
+</body>
+
+</html>

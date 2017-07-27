@@ -1,0 +1,94 @@
+{layout name="layout" /}
+
+<style type="text/css">
+.sys_upload{padding: 10px;}
+.sys_upload ul li{padding: 10px;}
+.sys_upload ul li .sys_btn{padding: 2px;width: 70px;}
+</style>
+<div id="right">  <link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<link href="__ASSETS__/css/pagination.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>标签检查</h2>
+</div>
+
+<form id="form1" name="form1" method="post" action="">
+
+<table  width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+  <tbody  id="e">
+  <tr id="option0">
+    <td colspan="3" class="cj_dbt">分配列表</td>
+  </tr>
+ 
+  <tr id="option1" bgcolor="#ffffff">
+    <th align="center">所属产品</th>
+    <th align="center">状态</th>
+    <th align="center">操作</th>
+   
+  </tr>
+  {volist name='yifpchanpin' id='vo_pro'}
+   <tr id="option2" bgcolor="#ffffff">
+   <td align="center">     
+            {$vo_pro.proname}   
+   </td>
+   <td align="center">
+   
+        已分配
+   
+   </td>
+   <td align="center">
+  
+        <a href="{:url('/member/Jiancha/edit')}?id={$vo_pro.pid}&proname={$vo_pro.proname} ">编辑</a>|<a href="{:url('/member/Jiancha/chakan1')}?id={$vo_pro.pid}&proname={$vo_pro.proname}">查看</a>|<label class='del' alt1="{$vo_pro.pid}"><a href="#">清空</a></label>
+  
+   </td>
+   </tr>
+   {/volist}
+   
+
+  </tbody>
+  <tr bgcolor="#ffffff">
+    <td colspan="3" class="cj_dbt"><a href="{:url('/member/Jiancha/addbiaoqian')}">添加</a></td>
+  </tr>
+  </table>
+                      {present name="page"}
+                        <div class="pagination alternate pagess"><span style="margin-right: 15px;">共{$count}条数据</span>{$page}</div>
+                        {/present}
+<script type="text/javascript">
+
+var rowCount=3;  //行数默认4行  
+  
+//添加行  
+function addRow(){  
+    rowCount++;  
+    var newRow='<tr bgcolor="#ffffff" id="option'+rowCount+'"><th width="20%">检查项</th><td id="qq" align="left"><input type="text" name="jianchaxiang[]" id="jpost[jianchaxiang][]"><a href="#" onclick=delRow('+rowCount+')>删除</a></td></tr>';  
+    $('#e').append(newRow);  
+}  
+   
+ function delRow(rowIndex){  
+    $("#option"+rowIndex).remove();  
+    rowCount--;  
+}  
+
+</script>
+<script type="text/javascript">
+  $(function(){
+    $(".del").click(function(){
+       
+      var msg = "您真的确定要清空吗？\n\n请确认！";
+      if(confirm(msg)==true){
+      var id=$(this).attr("alt1");
+      var url="{:url('/member/Jiancha/delete')}";
+      $.post(url,{id:id},function(data){
+        if(data==0){
+          alert("清空失败");
+        }else{
+          alert("清空成功");
+          window.location.reload();
+        }
+        
+      });
+        }
+    })
+  })
+</script>
+</form>
+</div>

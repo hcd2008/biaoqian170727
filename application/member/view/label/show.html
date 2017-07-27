@@ -1,0 +1,91 @@
+{layout name="layout" /}
+<style>
+  .chengyuan{
+    display: none;
+    border:1px solid #ccc;
+  }
+  .banben{
+    font-size: 16px;
+    font-weight: bold;
+    color:#2983CF;
+  }
+  .shijian{
+    font-size: 12px;
+    color: #999;
+  }
+  p{
+    padding:5px;
+  }
+  .label{
+    width:500px;
+    margin:10px auto;
+    padding:15px;
+    border:1px solid #ccc;
+    border-radius: 5px;
+  }
+  .bumen{
+    display: inline-block;
+    width:100px;
+    font-weight: bold;
+  }
+  .label_intro{
+    height:40px;
+    line-height: 40px;
+    border-bottom: 1px dashed #ddd;
+    margin-bottom: 5px;
+  }
+</style>
+<script>
+  $(function(){
+    $(".chakan").click(function(){
+      $(this).next(".chengyuan").toggle();
+    })
+  })
+</script>
+<div id="right">
+  <link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+  <div class="title" style="border-bottom:0px;">
+    <h2>标签库--标签评审过程</h2>
+  </div>
+  <div class="lieb_box">
+  {foreach $items as $k=>$t}
+    <div class="label">
+      <div class="label_intro"> <span class="banben">版本{$t['version']}</span> <span class="shijian">&nbsp;开始时间:{$t.starttime|timetodate='5'}&nbsp;&nbsp;评审结束结束时间：{$t.endtime|timetodate='5'}</span> </div>
+      {if $t['diy_id']}
+        {if !empty($t['diy_list'])}
+        {foreach $t['diy_list'] as $k1=>$v1}
+        <p>
+          <span class="bumen">[流程{$k1}]</span>&nbsp;
+          {foreach $v1['depts'] as $k2=>$v2}
+          <a target="_blank" href="{:url('task/report_detail')}?revid={$v2['revid']}">{$v2.dept_name}</a>&nbsp;&nbsp; 
+          {/foreach}
+          {foreach $v1['users'] as $k3=>$v3}
+          <a target="_blank" href="{:url('task/report_detail')}?revid={$v3['revid']}">{$v3.realname}</a>&nbsp;&nbsp; 
+          {/foreach}
+        </p>
+        {/foreach}
+        {/if}
+      {else}
+        {if !empty($t['dept_task_list'])}
+        {foreach $t['dept_task_list'] as $dk=>$dt}
+          <p>
+            <span class="bumen">[{$dt.dept_name}]</span>&nbsp;
+    		    {foreach $dt['taks_list'] as $tk=>$tt}
+          	<a target="_blank" href="{:url('task/report_detail')}?revid={$tt['revid']}">{$tt.realname}</a>&nbsp;&nbsp; 
+            {/foreach}
+          </p>
+        {/foreach}
+        {/if}
+        {if !empty($t['member_task_list'])}
+    	  <p>
+          <span class="bumen">个人评审：</span>&nbsp;
+        	{foreach $t['member_task_list'] as $mk=>$mt}
+          	<a target="_blank" href="{:url('task/report_detail')}?revid={$mt['revid']}">{$mt.realname}</a>&nbsp;&nbsp; 
+          {/foreach}
+  	    {/if}
+      {/if}
+    </div>
+  {/foreach}
+  
+  </div>
+</div>

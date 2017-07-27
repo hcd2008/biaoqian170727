@@ -1,0 +1,68 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title">
+  <h2>标签评审-&gt;报告详情</h2>
+</div>
+<div class="lieb_box">
+<div id="myPrintArea"> 
+<style>
+.dybg th{ background-color:#e3eff6;height:40px;line-height:40px;font-size:14px;}
+.dybg{overflow:hidden;margin-top:30px;line-height:30px;border:1px solid #c4c4c4;border-left:0px;font-size:14px;}
+.dybg td,.dybg th{border:1px solid #c4c4c4;border-right:0px;border-bottom:0px;height:30px;}
+.dybg td{padding-left:5px;}
+.myimg{width:70px;}
+.qlist{display: block;line-height: 25px;font-size: 12px;}
+</style>
+<table width="99%" cellpadding="0" cellspacing="0" class="dybg">
+  <tbody><tr bgcolor="#ffffff">
+    <th width="100%" align="center" colspan="4" style="border-top:0px;">评审报告</th>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th width="18%" align="center">项目名称</th>
+    <td width="82%" align="left" colspan="3">{$project['title']}</td>
+  </tr>
+        <tr bgcolor="#ffffff">
+    <th align="center" width="18%">评审人</th>
+    <td align="left" width="32%">{$user_info['realname']}</td>
+    <th align="center" width="18%">部门</th>
+    <td align="left" width="32%">{$user_info['dept']|get_dept}</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">评审时间</th>
+    <td align="left" width="32%">{$rev_info['rev_report_time']|timetodate}</td>
+    <th align="center" width="18%">职务</th>
+    <td align="left" width="32%">{$user_info['zhiwei']}</td>
+ </tr>
+  <tr bgcolor="#ffffff">
+    <th align="center" width="18%">评审结果</th>
+    <td align="left" width="32%">{$rev_info['rev_result_state']|review_result_state}</td>
+    <th align="center" width="18%">报告状态</th>
+    <td align="left" width="32%">{$rev_info['rev_state']|review_state}</td>
+ </tr>
+    <tr bgcolor="#ffffff">
+    <th align="center">评审意见</th>
+    <td align="left" colspan="3">
+    	{if $question_list}
+    	{foreach $question_list as $t}</span>
+		<span class="qlist">问题摘要：{$t['qs_ext1']}</span>
+		<span class="qlist">问题类型：{$t['question_type']}</span>
+		<span class="qlist">问题区域：{$t['question_area']}</span>
+		<span class="qlist">判定依据：{$t['qs_ext2']}</span>
+		<span class="qlist">详情说明：{$t['qs_ext3']|strip_tags}</span>
+		<hr>
+    	{/foreach}
+    	{/if}
+    </td>
+  </tr>
+    <tr bgcolor="#ffffff">
+    <th align="center">评审图片</th>
+    <td align="left" colspan="3">
+    	<a href="{$rev_info['rev_attach']}" target="_blank">
+    		<img src="{$rev_info['rev_attach']}" style="max-width:850px;padding:5px;">
+    	</a>
+    </td>
+  </tr>
+  </tbody></table>
+</div>
+<div class="pages"><input type="button" class="mybtn" value="返回" onclick="history.go(-1);"> </div>
+</div>

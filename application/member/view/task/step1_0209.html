@@ -1,0 +1,845 @@
+{layout name="layout" /}
+<?php extract($project_info); ?>
+<div style=" position:absolute;width:100%;">
+	<link href="__ASSETS__/label_tools/css/canvas.css" type="text/css" rel="stylesheet" />
+	<link href="__ASSETS__/label_tools/css/pageruler.css" type="text/css" rel="stylesheet" />
+	<link href="__ASSETS__/label_tools/css/slider.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="__ASSETS__/label_tools/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__ASSETS__/label_tools/js/initmark.js"></script>
+	<script type="text/javascript" src="__ASSETS__/label_tools/js/jquery.PageRuler.1.1.js"></script>
+	<script type="text/javascript" src="__ASSETS__/label_tools/js/slider_extras.js"></script>
+	<script type="text/javascript" src="__ASSETS__/label_tools/js/color.js"></script>
+    <script>
+      // $(function(){
+      //   $(document).keydown(function(e){
+      //     if(e.which==82){
+      //       $("#toolbox").toggle();
+      //     }
+      //   })
+      // })
+    </script>
+    <style>
+      .sylbg{
+        font-size: 13px;
+      }
+        #right{min-height:680px;}
+
+    </style>
+<script type="text/javascript">
+var revid = '{$revid}';
+var proid = '{$id}';
+var base64_data = '';
+var rev_state	= 0;
+var url = "{:url('member/task/step2')}"
+$(function(){
+	$('#submit_result').click(function(){;
+		base64_data = canvas.toDataURL();
+		rev_state = $("input[name='result']:checked").val();
+		$.post(url,{proid:proid,revid:revid,rev_state:rev_state,base64_data:base64_data},function(data){
+			alert(data.msg)
+			window.location.href = "{:url('member/task/index')}";
+		});
+	});
+})
+
+var winSlider;
+$(function() {
+    initDrag();
+
+    // 加载测试图片
+    var image = new Image();
+    image.src = "{$pic}";
+    $("#yuan").click(function(){
+       image.src = "{$pic}";
+    })
+    $("#middle").click(function(){
+       image.src = "{$pic}";
+    })
+    $("#small").click(function(){
+       image.src = "{$pic}";
+    })
+    image.onload = function() {
+        canvasWidth = image.width;
+        canvasHeight = image.height;
+        initCanvas(canvasWidth, canvasHeight);
+        cxt.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+
+        $("#imgSize").val("{$size}");
+        // test
+        /*
+         * cxt_bak.beginPath(); cxt_bak.moveTo(0 , canvas_bak.height); cxt_bak.lineTo(canvas_bak.width ,0 ); cxt_bak.stroke();
+         */
+
+        // cxt_bak.fillStyle='rgba(255,0,0,0.25)';
+        // cxt_bak.fillRect(90,90,300,300);
+        // cxt_bak.tips(100,100,100,100,10,'hello','green').stroke();
+        // cxt_bak.tipsRect(10,10,100,100).stroke();
+        // cxt_bak.roundRect(20,20, 100, 100, 5, true, true);
+        saveImageToAry();
+    }
+     
+    // 点击弹出搜索框之外的区域隐藏
+    $(document).die().live("click", function(e) {
+        //console.log(e.target.id);
+        if (e.target.id != 'magnifier_img' && $(e.target).parents("#zoomDiv").length == 0) {
+            //$('#zoomDiv').hide();
+            $("#zoomDiv").css({"top": "-1000px", "left": "-1000px"});
+        }
+        
+        //console.log($(e.target).parents("#rgbLayerDiv").length);
+        //console.log(e.target.id);
+        if (e.target.id != 'cmykLayer_img' && $(e.target).parents("#cmykLayerDiv").length == 0) {
+            $("#cmykLayerDiv").css({"top": "-1000px", "left": "-1000px"});
+        }
+    });
+    
+
+    $("#magnifier").die().live("click",function(e){
+          //console.log("ok");
+          if($("#sliderDemo3").html() == ''){
+              winSlider = new neverModules.modules.slider(
+                      {
+                          targetId: "sliderDemo3",
+                          sliderCss: "winSlider",
+                          barCss: "winBar",
+                          min: 10,
+                          max: 500,
+                          hints: "缩放百分比"
+                      });
+               winSlider.onstart  = function () {
+                   //console.log(winSlider.getValue());
+                   //$("#slideValue").html(winSlider.getValue());
+                   //magnifier(winSlider.getValue());
+                   $("#slideValue").val(winSlider.getValue());
+               }
+               winSlider.onchange = function () {
+                   //console.log(winSlider.getValue());
+                   $("#slideValue").val(winSlider.getValue());
+                   //magnifier(winSlider.getValue());
+               };
+               winSlider.onend = function () {
+                   //console.log(winSlider.getValue());
+                   $("#slideValue").val(winSlider.getValue());
+                   magnifier(winSlider.getValue());
+               }
+               winSlider.create();
+               winSlider.setValue(100);
+               
+               $("#zoomOK").die().live("click", function(){
+                   var slideValue = $("#slideValue").val();
+                   winSlider.setValue(slideValue);
+               });
+          }
+          
+         //$("#zoomDiv").show();
+         //$("#zoomDiv").toggle();
+         $("#zoomDiv").css({"top":e.clientY + 10, "left":e.clientX + 10});
+     });
+    
+    $("#rgbLayer").die().live("click",function(e){
+         $("#rgbLayerDiv").css({"top":e.clientY + 10, "left":e.clientX + 10});
+    });
+    
+    $("input[name=rgb_layer]").die().live("click",function(){
+//         //var imgdata2=cxt_bak.getImageData(0,0,canvas.width,canvas.height);
+//         //var data2=imgdata2.data;
+//　　　　   /*灰度处理：求r，g，b的均值，并赋回给r，g，b*/
+//         for(var i=0,n=data.length;i<n;i+=4){
+//             var average=(data[i]+data[i+1]+data[i+2])/3;
+//             data[i]=data[i];
+//             data[i+1]=255-data[i+1];
+//             data[i+2]=255-data[i+2];
+//         }
+//         cxt_bak.putImageData(imgdata,0,0);
+//         console.log("ok");
+    });
+    
+    $("#closeDownloadDiv").die().live("click",function(){
+        $("#downloadDiv").css({"top":"-100px","left":"-100px"});
+        $("#imgLoading").show();
+        $("#download").hide();
+        $("#download").attr("download", "图片未生成");
+        $("#download").attr("href", "");
+    });
+    
+    $("#cmykLayer").die().live("click",function(e){
+        $("#cmykLayerDiv").css({"top":e.clientY + 10, "left":e.clientX + 10});
+    });
+    
+    $("input[name=cmyk_layer]").die().live("click",function(){
+         var layer = $(this).val();
+         $(".cmykLayer").hide();
+         if(layer == "CMYK"){
+             return;
+         }
+         //console.log(layer);
+         $("#canvas_" + layer).show();
+         
+         var isModify = $("#isModify").val();
+         if(isModify == 1){
+             var width = $(canvas).width();
+             var height = $(canvas).height();
+             var image_rgb = cxt.getImageData(0, 0, width, height);
+             var data_rgb = image_rgb.data;
+             //console.log(image_rgb);
+             
+             var newImage_c = cxt_c.getImageData(0, 0, width, height);
+             var newImage_m = cxt_c.getImageData(0, 0, width, height);
+             var newImage_y = cxt_c.getImageData(0, 0, width, height);
+             var newImage_k = cxt_c.getImageData(0, 0, width, height);
+             var newdata_c = newImage_c.data;
+             var newdata_m = newImage_m.data;
+             var newdata_y = newImage_y.data;
+             var newdata_k = newImage_k.data;
+             for(var i=0,n=newdata_c.length;i<n;i+=4){
+                 var rgba_c = rgbLayer(data_rgb[i], data_rgb[i+1], data_rgb[i+2], data_rgb[i+3], "c");
+                 newdata_c[i]= rgba_c.r;
+                 newdata_c[i+1]= rgba_c.g;
+                 newdata_c[i+2]= rgba_c.b;
+                 newdata_c[i+3]= rgba_c.a;
+                 
+                 var rgba_m = rgbLayer(data_rgb[i], data_rgb[i+1], data_rgb[i+2], data_rgb[i+3], "m");
+                 newdata_m[i]= rgba_m.r;
+                 newdata_m[i+1]= rgba_m.g;
+                 newdata_m[i+2]= rgba_m.b;
+                 newdata_m[i+3]= rgba_m.a;
+                 
+                 var rgba_y = rgbLayer(data_rgb[i], data_rgb[i+1], data_rgb[i+2], data_rgb[i+3], "y");
+                 newdata_y[i]= rgba_y.r;
+                 newdata_y[i+1]= rgba_y.g;
+                 newdata_y[i+2]= rgba_y.b;
+                 newdata_y[i+3]= rgba_y.a;
+                 
+                 var rgba_k = rgbLayer(data_rgb[i], data_rgb[i+1], data_rgb[i+2], data_rgb[i+3], "k");
+                 newdata_k[i]= rgba_k.r;
+                 newdata_k[i+1]= rgba_k.g;
+                 newdata_k[i+2]= rgba_k.b;
+                 newdata_k[i+3]= rgba_k.a;
+             }
+             
+             //newImage.data = image_rgb.data;
+             //console.log(newImage);
+             cxt_c.putImageData(newImage_c, 0, 0);
+             cxt_m.putImageData(newImage_m, 0, 0);
+             cxt_y.putImageData(newImage_y, 0, 0);
+             cxt_k.putImageData(newImage_k, 0, 0);
+             
+             console.log("ok");
+             $("#isModify").val(0); //未修改
+         }
+    });
+    
+//    $("#imgSize").keyup(function(){
+//        var sizeValue = $("#imgSize").val();
+//        $("#imgSize").val(parseFloat(sizeValue));
+//    });
+});
+</script>
+<style>
+.red_border{border-color:red;}
+/*弹出框时层级比标尺高*/
+</style>
+<script> 
+$(document).ready(function(){
+$(".flip").click(function(event){
+event.stopPropagation(); 
+$(".panel").toggle();
+//隐藏其他子菜单
+$(".xksa").toggle();
+$(".xzsa").hide();
+$(".xksa").hide();
+$(".bzsa").hide();
+$(".psbg").hide();
+$(".xmxx").hide();
+$(".cpxx").hide();
+});
+$(document).click(function (event) { $('.panel').slideUp('normal') }); 
+});
+
+$(document).ready(function(){
+$(".xks").click(function(event){
+  event.stopPropagation();
+//隐藏其他子菜单
+$(".xksa").toggle();
+$(".panel").hide();
+$(".xzsa").hide();
+$(".bzsa").hide();
+$(".psbg").hide();
+$(".xmxx").hide();
+$(".cpxx").hide();
+});
+$("#rongqi").click(function (event) { $('.xksa').slideUp('normal') });  
+});
+$(document).ready(function(){
+$(".xzs").click(function(){
+$(".xzsa").toggle();
+//隐藏其他子菜单
+$(".xksa").toggle();
+$(".panel").hide();
+$(".xksa").hide();
+$(".bzsa").hide();
+$(".psbg").hide();
+$(".xmxx").hide();
+$(".cpxx").hide();
+$(".bdgnc").hide();
+}); 
+$("#rongqi").click(function () { $('.xzsa').slideUp('normal') });  
+});
+$(document).ready(function(){
+$(".bzs").click(function(e){
+e.stopPropagation();
+$(".bzsa").toggle();
+//隐藏其他子菜单
+$(".xksa").toggle();
+$(".panel").hide();
+$(".xzsa").hide();
+$(".xksa").hide();
+$(".psbg").hide();
+$(".xmxx").hide();
+$(".cpxx").hide();
+$(".bdgnc").hide();
+});
+$("#rongqi").click(function (event) { $('.bzsa').slideUp('normal') });  
+});
+$(document).ready(function(){
+$(".psbgn").click(function(event){
+  event.stopPropagation();
+$(".psbg").toggle();
+//隐藏其他子菜单
+$(".xmxx").hide();
+$(".help").hide();
+});
+$("#rongqi").click(function (event) { $('.psbg').slideUp('normal') });  
+});
+$(document).ready(function(){
+$(".xmxxn").click(function(event){
+  event.stopPropagation();
+$(".xmxx").toggle();
+//隐藏其他子菜单
+$(".psbg").hide();
+$(".cpxx").hide();
+$(".help").hide();
+});
+$("#rongqi").click(function (event) { $('.xmxx').slideUp('normal') });  
+});
+$(document).ready(function(){
+$(".helpbtn").click(function(event){
+  event.stopPropagation();
+$(".help").toggle();
+//隐藏其他子菜单
+$(".psbg").hide();
+$(".xmxx").hide();
+});
+$("#rongqi").click(function (event) { $('.xmxx').slideUp('normal') });  
+});
+$(document).ready(function(){
+$(".cpxxn").click(function(event){
+event.stopPropagation(); 
+$(".cpxx").toggle();
+//隐藏其他子菜单
+$(".xksa").toggle();
+$(".panel").hide();
+$(".xzsa").hide();
+$(".xksa").hide();
+$(".bzsa").hide();
+$(".psbg").hide();
+$(".xmxx").hide();
+$(".bdgnc").hide();
+}); 
+$("#rongqi").click(function (event) { $('.cpxx').slideUp('normal') });  
+});
+$(document).ready(function(){
+$("#cmykLayer").click(function(event){
+$("#cmykLayerDiv").toggle();
+});
+});
+$(document).ready(function(){
+$(".bdgn").click(function(event){
+$(".bdgnc").toggle();
+//隐藏其他子菜单
+$(".xksa").toggle();
+$(".panel").hide();
+$(".xzsa").hide();
+$(".xksa").hide();
+$(".bzsa").hide();
+$(".psbg").hide();
+$(".xmxx").hide();
+$(".cpxx").hide();
+});
+$("#rongqi").click(function (event) { $('.bdgnc').slideUp('normal') });  
+
+});
+
+</script>
+		<div id="content" unselectable="on" onselectstart="return false;" style="-moz-user-select:none;">
+		  <div id="toolbox" style="z-index:102;position: absolute;top:0px;left:0px;">
+				<ul>
+        <!--   <li id="size"><ul>图片选择:<select name=""><option id="yuan" value="11">原图</option><option id='middle' selected="selected">中图</option><option id='small'>缩略图</option></select></ul></li> -->
+
+				  <li id="tool">
+						<ul>
+							<!-- draw_graph('text','actions',this)  text('actions',this) -->
+							<!-- <li class="actions" onClick="draw_graph('pencil','actions',this)" id="brush" title="铅笔"><img src="__ASSETS__/label_tools/images/toolbar/Brush.png" ></li>
+							<li class="actions" onClick="draw_graph('rubber','actions',this)" id="eraser" title="橡皮"><img src="__ASSETS__/label_tools/images/toolbar/Eraser.png" ></li> -->
+							<li class="actions" onClick="paint(4)" id="paint" title="油漆桶" style="display:none;"><img src="__ASSETS__/label_tools/images/toolbar/Paint.png" ></li>
+							<li class="actions" onClick="draw_graph('straw','actions',this)" id="straw" title="拾色器"><img src="__ASSETS__/label_tools/images/toolbar/Straw.png" ></li>
+							
+							<li class="actions" onClick="draw_graph('text','actions',this)" id="text" title="单点、不规则标注"><img src="__ASSETS__/label_tools/images/toolbar/mark_poly.png" ></li>
+							<li class="actions" onClick="draw_graph('linetext','actions',this)" id="linetext" title="横线标注"><img src="__ASSETS__/label_tools/images/toolbar/mark_line.png" ></li>
+							<li class="actions" onClick="draw_graph('squaretext','actions',this)" id="squaretext" title="矩形标注"><img src="__ASSETS__/label_tools/images/toolbar/mark_rect.png" ></li>
+							<li class="actions" onClick="draw_graph('circletext','actions',this)" id="circletext" title="圆形标注"><img src="__ASSETS__/label_tools/images/toolbar/mark_circle.png" ></li>
+							
+							
+							<li class="actions" id="magnifier" title="缩放"><img src="__ASSETS__/label_tools/images/toolbar/Magnifier.png" id="magnifier_img"></li>
+							<li class="actions" onClick="draw_graph('part_enlarge','actions',this)" id="part_enlarge" title="局部放大"><img src="__ASSETS__/label_tools/images/toolbar/zoom.png" ></li>
+							<li class="actions" onClick="draw_graph('same','actions',this)" id="same" title="1:1等比"><img src="__ASSETS__/label_tools/images/toolbar/zoom-100.png" ></li>
+							<li class="actions" onClick="cancel(this)" id="cancel" title="撤销"><img src="__ASSETS__/label_tools/images/toolbar/cancel.png" ></li>
+							<li class="actions" onClick="draw_graph('rule','actions',this)" id="rule" title="单线测量"><img src="__ASSETS__/label_tools/images/toolbar/rule.png" ></li>
+							<li class="actions" onClick="draw_graph('rect_rule','actions',this)" id="rect_rule" title="矩形测量"><img src="__ASSETS__/label_tools/images/toolbar/rect_rule.png" ></li>
+							
+							<!-- <li class="actions" onclick="draw_graph('horizontal','actions',this)" id="horizontal" title="水平翻转"><img src="__ASSETS__/label_tools/images/toolbar/horizontal.png" ></li>
+							<li class="actions" onclick="draw_graph('vertical','actions',this)" id="vertical" title="垂直翻转"><img src="__ASSETS__/label_tools/images/toolbar/vertical.png" ></li> -->
+							<li class="actions" onClick="draw_graph('turn_right','actions',this)" id="turn_right" title="顺时针翻转90°"><img src="__ASSETS__/label_tools/images/toolbar/rotationright.png" ></li>
+							<li class="actions" onClick="draw_graph('turn_left','actions',this)" id="turn_left" title="逆时针翻转90°"><img src="__ASSETS__/label_tools/images/toolbar/rotationleft.png" ></li>
+							
+							
+							<li class="actions" onClick="draw_graph('drag','actions',this)" id="drag" title="拖动"><img src="__ASSETS__/label_tools/images/toolbar/drag.png"></li>
+							<!-- <li class="actions" id="cmykLayer" title="CMYK分层: 分层处理较慢，请耐心等待!"><img src="__ASSETS__/label_tools/images/toolbar/layer.png" id="cmykLayer_img"></li> -->
+						</ul>
+					</li>
+					<li id="xzan"><img src="__ASSETS__/label_tools/images/toolbar/xian_d.png" alt="选择线" class="flip" title="选择线">
+                    <li id="size" style="display:none;" class="panel">
+						
+						<ul style="width:70px;margin:0px;">
+							<li style="float:none;" class="lineWidths" onClick="setWidth('lineWidths',this,0)" id="width_1"><img src="__ASSETS__/label_tools/images/toolbar/line1px.png"></li>
+							<li style="float:none;" class="lineWidths" onClick="setWidth('lineWidths',this,1)" id="width_3"><img src="__ASSETS__/label_tools/images/toolbar/line3px.png"></li>
+							<li style="float:none;" class="lineWidths" onClick="setWidth('lineWidths',this,2)" id="width_5"><img src="__ASSETS__/label_tools/images/toolbar/line5px.png"></li>
+							<li style="float:none;" class="lineWidths" onClick="setWidth('lineWidths',this,3)" id="width_8"><img src="__ASSETS__/label_tools/images/toolbar/line8px.png"></li>
+						</ul>
+					</li>
+                    </li>
+                    					<li id="xzan"><img src="__ASSETS__/label_tools/images/toolbar/rect_d.png" alt="选择形状" class="xzs" title="选择形状">
+                                        <li id="shape" style="display:none;border:1px solid #cccccc;background-color:none;" class="xzsa">
+						<ul>
+							<li class="actions" onClick="draw_graph('line','actions',this)" id="line" title="直线"><img src="__ASSETS__/label_tools/images/toolbar/line.png"></li>
+							<li class="actions" onClick="draw_graph('circle','actions',this)" id="arc" title="圆形"><img src="__ASSETS__/label_tools/images/toolbar/arc.png"></li>
+							<li class="actions" onClick="draw_graph('square','actions',this)" id="rect" title="正方形"><img src="__ASSETS__/label_tools/images/toolbar/rect.png"></li>
+							<li class="actions" onClick="draw_graph('poly','actions',this)" id="poly" title="三角形"><img src="__ASSETS__/label_tools/images/toolbar/poly.png"></li>
+							<li class="actions" onClick="draw_graph('fillCircle','actions',this)" id="arcFill" title="实心圆"><img src="__ASSETS__/label_tools/images/toolbar/arcfill.png"></li>
+							<li class="actions" onClick="draw_graph('fillSquare','actions',this)" id="rectFill" title="实心正方形"><img src="__ASSETS__/label_tools/images/toolbar/rectfill.png"></li>
+						</ul>
+					</li>
+                    </li>
+                    					<li id="xzan"><img src="__ASSETS__/label_tools/images/toolbar/bzs.png" alt="选择线框颜色" class="xks" title="选择线框颜色"><li id="color" style="display:none;border:1px solid #cccccc;background-color:none;" class="xksa">
+						<ul>
+                            <li class="colors" id="red" onClick="setColor('colors',this,0)"></li>
+							<li class="colors" id="green" onClick="setColor('colors',this,1)"></li>
+							<li class="colors" id="blue" onClick="setColor('colors',this,2)"></li>
+							<li class="colors" id="yellow" onClick="setColor('colors',this,3)"></li>
+							<li class="colors" id="white" onClick="setColor('colors',this,4)"></li>
+							<li class="colors" id="black" onClick="setColor('colors',this,5)"></li>
+							<li class="colors" id="pink" onClick="setColor('colors',this,6)"></li>
+							<li class="colors" id="purple" onClick="setColor('colors',this,7)"></li>
+							<li class="colors" id="cyan" onClick="setColor('colors',this,8)"></li>
+							<li class="colors" id="orange" onClick="setColor('colors',this,9)"></li>
+						</ul>
+					</li>
+                    </li>
+                    					<li id="xzan"><img src="__ASSETS__/label_tools/images/toolbar/xts_d.png" alt="选择标注背景色" class="bzs" title="选择标注背景色"><li id="color" style="display:none;border:1px solid #cccccc;background-color:none;" class="bzsa">
+						<ul>
+                        	<li class="bgcolors" id="red" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="green" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="blue" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="yellow" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="white" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="black" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="pink" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="purple" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="cyan" onClick="setTipBgColor('bgcolors',this)"></li>
+							<li class="bgcolors" id="orange" onClick="setTipBgColor('bgcolors',this)"></li>
+						</ul>
+					</li>
+                    </li>
+                    <li id="xzan">
+					{if $version>1}
+					<button type="button" class="bdgn">版本比对</button>
+					
+                    <div class="bdgnc" style="display:none">
+					<form id="form1" name="form1" action="?file=compare" method="post" onSubmit="return check_bd();">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+                      <tr bgcolor="#ffffff">
+                        <td><input name="lv[]" id="lv" type="checkbox" value="111">&nbsp;2222222</td>
+                      </tr>
+                    
+                       <tr bgcolor="#ffffff">
+                        <td><input type="submit" name="submit" value="提交" /></td>
+                      </tr>
+                    </table>
+                    </form>
+                    <script language="javascript">
+                    function check_bd(){
+                        if($("input[name='lv[]']:checked").length !=2){
+                            alert("");
+                            return false;
+                        }
+                    }
+                    </script>
+                    </div>{/if}
+ 				</li>
+
+
+				</ul>
+			</div>		
+<div class="mb"></div>
+        <div style="z-index:50;position: absolute;top:35px;text-align:left;border-top:1px solid #e3eff6;border-bottom:1px solid #e3eff6;line-height:25px;left:0px;background-color:#f3f3f3;width:100%;"><span style="color:red"> &nbsp;R：显示/隐藏标尺&nbsp;&nbsp;</span><span style="color:rgb(44, 203, 107)">H：显示/隐藏参考线&nbsp;&nbsp;</span><span style="color:rgb(51, 46, 226);">\：新建参考线&nbsp;&nbsp;</span>Esc：隐藏标尺参考线  【说明：显示参考线时其他按钮不可操作】</div>
+      <di style="display:none";><input id="imgSize" value="{$size}"></div>
+      <div class="mb"></div>
+      <div id="rongqi" style="position:absolute;width:100%;height:600px;z-index:9"></div>
+    
+      <canvas id="canvas_bak" class="canvas" width="500" height="400" style="z-index:101;position: absolute;top:90px;left:30px;"></canvas>
+      <canvas id="canvas" class="canvas" width="500" height="400" style="z-index:100;position: absolute;top:90px;left:30px;"> 画布区域</canvas>
+      <canvas id="canvas_c" class="canvas cmykLayer" width="500" height="400" style="z-index:101;position: absolute;top:90px;left:30px;display:none"></canvas>
+      <canvas id="canvas_m" class="canvas cmykLayer" width="500" height="400" style="z-index:101;position: absolute;top:90px;left:30px;display:none"></canvas>
+      <canvas id="canvas_y" class="canvas cmykLayer" width="500" height="400" style="z-index:101;position: absolute;top:90px;left:30px;display:none"></canvas>
+      <canvas id="canvas_k" class="canvas cmykLayer" width="500" height="400" style="z-index:101;position: absolute;top:90px;left:30px;display:none"></canvas>
+      <div id="mycan" style="z-index:101;position: absolute;top:70px;left:10px;"></div>
+      <input id="isModify" type="hidden" value="0"/>
+      
+      <div id="partEnlargeDiv" style="display:none; position: absolute;top:90px;left:30px;">
+        <canvas id="canvas_enlarge" width="200" height="200" style="z-index:102;"></canvas>
+      </div>
+      <script src="__ASSETS__/label_tools/js/canvas.js"></script>
+      <div class="mb"></div>
+      <footer id="status">
+        
+      </footer> 
+			
+		</div>
+		<div class="mb"></div>
+		<div id="zoomDiv" style="position: fixed;top:-1000px;left:-1000px;z-index:108;border: 1px solid grey;width:370px;height:30px;background:white;padding:10px;">
+			<a href="#" id="zoomOK" style="float:right;">确定</a> 
+			<span style="float:right;margin-right:5px;">缩放比：<input type="text" id="slideValue" value="100" style="width:30px;margin-right:5px;">%</span>
+			<!-- <input style="float:right;width:20px;margin-right:10px;"> -->
+			<div id="sliderDemo3" style="height:40px;"></div>
+		</div>
+		<div id="cmykLayerDiv" style="position: absolute;display:none;top:35px;left:600px;z-index:108;border: 1px solid grey;width:310px;height:30px;background:white;padding:10px;">
+			<label><input style="margin:10px 0 0 20px;" type="radio" name="cmyk_layer" id="cmyk_layer" value="CMYK" checked><span> CMYK</span></label>
+			<label><input style="margin:10px 0 0 20px;" type="radio" name="cmyk_layer" id="c_layer" value="c"><span> C</span></label>
+			<label><input style="margin:10px 0 0 20px;" type="radio" name="cmyk_layer" id="m_layer" value="m"><span> M</span></label>
+			<label><input style="margin:10px 0 0 20px;" type="radio" name="cmyk_layer" id="y_layer" value="y"><span> Y</span></label>
+			<label><input style="margin:10px 0 0 20px;" type="radio" name="cmyk_layer" id="k_layer" value="k"><span> K</span></label>
+		</div>
+		<style>
+      .right_info{
+        z-index: 9999;
+        position: fixed;
+        right:0;
+        top:200px;
+      }
+      .right_info button{
+        margin:0;
+        padding:0;
+        position: relative;
+        margin-bottom: 5px;
+        height:105px;
+        display: block;
+        width:40px;
+        text-align: center;
+      }
+      .psbg{
+        width:650px;
+        z-index: 9999;
+        position: fixed;
+        right:40px;
+        top:200px;
+      }
+      .xmxx{
+        width:500px;
+        z-index: 9999;
+        position: fixed;
+        right:40px;
+        top:200px;
+      }
+       .help{
+        z-index: 9999;
+        position: fixed;
+        right:40px;
+        top:100px;
+      }
+      .help{
+        width:500px;
+        display: none;
+      }
+      .helptb{
+        font-size: 12px;
+        width:100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+      .helptb td,.helptb th{
+        padding:5px;
+        border:1px solid #ccc;
+        text-align: center;
+      }
+    </style>
+    <div class="right_info">
+      <button type="button" class="psbgn" style="width:40px;">评<br>审<br>状<br>态</button>
+      <button type="button" class="xmxxn" style="width:40px;">项<br>目<br>信<br>息</button>
+      <button type="button" class="helpbtn" style="width:40px;">帮<br>助<br>说<br>明</button>
+    </div>
+    <div class="psbg" style="display:none">
+        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+          <tr bgcolor="#ffffff">
+            <th width="25%" align="center" style="padding:10px;">评审结果</th>
+            <td align="left" style="padding:10px;"><input name="result" checked="checked" type="radio" value="1" id="result" />通过审核&nbsp;&nbsp;<input id="result" name="result" type="radio" value="0" />拒绝通过</td>
+          </tr>
+          <tr bgcolor="#ffffff">
+            <td colspan=2><input id="submit_result" name="button" type="button" value="提交" style="margin-top:10px;margin-left:40%;" /></td>
+          </tr>
+        </table>
+      </div>
+      <div class="xmxx" style="display:none">
+          <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+            <tr bgcolor="#ffffff">
+              <th width="18%" align="center">项目名称</th>
+              <td width="82%" align="left" style="padding:10px;">{$title}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">项目类型</th>
+              <td align="left">{$type|label_type}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">所属产品</th>
+              <td align="left">{$project_id|get_product_name}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">所属模型</th>
+              <td align="left"></td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">创建时间</th>
+              <td align="left">{$addtime|timetodate}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">当前版本</th>
+              <td align="left">V{$version}</td>
+            </tr>
+            <tr bgcolor="#ffffff">
+              <th style="padding:10px;" align="center">项目描述</th>
+              <td align="left">11</td>
+            </tr>
+          </table>
+      </div>
+      <div class="help">
+        <table class="helptb" width=100%>
+          <tr>
+            <th width=20%>图标</th>
+            <th width=20%>工具名</th>
+            <th width=30%>用途</th>
+            <th width=30%>使用方法</th>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/Straw.png" alt=""></td>
+            <td>拾色器</td>
+            <td>获取rgba、cmyk值</td>
+            <td>将鼠标放到取色位置上，再将鼠标放到该工具上</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/mark_poly.png" alt=""></td>
+            <td>单点、不规则标注</td>
+            <td>用于绘制不规则形状</td>
+            <td>选择该工具，按住鼠标左键在图片上拖动</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/mark_line.png" alt=""></td>
+            <td>横线标注</td>
+            <td>用于绘制横线标注</td>
+            <td>选择该工具，按住鼠标左键在图片上拖动</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/mark_rect.png" alt=""></td>
+            <td>矩形标注</td>
+            <td>用于绘制矩形标注</td>
+            <td>选择该工具，按住鼠标左键在图片上拖动</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/mark_circle.png" alt=""></td>
+            <td>圆形标注</td>
+            <td>用于绘制圆形标注</td>
+            <td>选择该工具，按住鼠标左键在图片上拖动</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/Magnifier.png" alt=""></td>
+            <td>缩放工具</td>
+            <td>用于放大缩小图片</td>
+            <td>点击该工具，弹出拖放块进行拖放或输入缩放百分比</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/zoom.png" alt=""></td>
+            <td>局部放大工具</td>
+            <td>用于放大局部图片</td>
+            <td>选择该工具，将鼠标至于需要放大的区域</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/zoom-100.png" alt=""></td>
+            <td>1:1等比工具</td>
+            <td>用于将图片重置为100%大小</td>
+            <td>点击该工具</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/cancel.png" alt=""></td>
+            <td>撤销</td>
+            <td>撤销上一步操作</td>
+            <td>点击该工具</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/rule.png" alt=""></td>
+            <td>单线测量</td>
+            <td>绘制直线并显示距离</td>
+            <td>选择该工具，按住鼠标左键在图片上拖动</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/rect_rule.png" alt=""></td>
+            <td>矩形测量</td>
+            <td>绘制矩形并显示距离</td>
+            <td>选择该工具，按住鼠标左键在图片上拖动</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/rect_d.png" alt=""></td>
+            <td>形状选项</td>
+            <td>设置绘画形状</td>
+            <td>点击该工具，选择</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/bzs.png" alt=""></td>
+            <td>线框颜色工具</td>
+            <td>设置线框颜色</td>
+            <td>点击该工具，选择</td>
+          </tr>
+          <tr>
+            <td align="center"><img width="20px" src="__ASSETS__/label_tools/images/toolbar/xts_d.png" alt=""></td>
+            <td>标注背景色工具</td>
+            <td>设置标注的背景色</td>
+            <td>点击该工具，选择</td>
+          </tr>
+        </table>
+      </div>
+       <div id="resinfo">
+          <p id="close">x</p>
+          <ul>
+          <li>
+            问题类型:
+            <select name="qctype" id="qctype">
+              <?php foreach ($question_type as $k => $v) {
+                echo "<option value='".$k."'>".$v."</option>";
+              } ?>
+            </select>
+          </li>
+          <li>
+            区域性问题分类:
+            <select name="qarea" id="qarea">
+              <?php foreach ($question_area as $k => $v) {
+                echo "<option value='".$k."'>".$v."</option>";
+              } ?>
+            </select>
+          </li>
+          
+          <li>问题描述：<input type="text" name="qdesc" id="qdesc" size=60>
+          </li>
+          <li>
+            法规依据：<input type="text" name="yiju" id="yiju" size=60>
+          </li>
+          <li>详细信息：
+            <!-- 加载编辑器的容器 -->
+             <script id="xiangqing" name="content" type="text/plain">
+                 
+             </script>
+             <!-- 配置文件 -->
+             <script type="text/javascript" src="__ASSETS__/script/ueditor/ueditor.config.js"></script>
+             <!-- 编辑器源码文件 -->
+             <script type="text/javascript" src="__ASSETS__/script/ueditor/ueditor.all.js"></script>
+             <!-- 实例化编辑器 -->
+             <script type="text/javascript">
+                 var ue = UE.getEditor('xiangqing');
+             </script>
+          </li>
+          <li><span id="queding">确定</span></li>
+        </ul>
+        </div>
+        <style>
+            #close{
+              text-align: right;
+            }
+            #resinfo{
+              padding:20px;
+              border-radius: 3px;
+              width:800px;
+              font-size: 13px;
+              position: absolute;
+              top:200px;
+              left:400px;
+              z-index: 999;
+              background: #eee;
+              display: none;
+              border:1px solid #ccc;
+            }
+            #resinfo input{
+              border:1px solid #ccc;
+              height:25px;
+              line-height: 25px;
+            }
+            #resinfo ul li{
+              margin:10px;
+            }
+            #queding{
+              display: block;
+              margin:0 auto;
+              width:50px;
+              text-align: center;
+              height:25px;
+              line-height: 25px;
+              background: #eee;
+              border-radius: 3px;
+              border:1px solid #999;
+              padding:0;
+              cursor: pointer;
+            }
+            #queding:hover{
+              background: #ccc;
+            }
+        </style>
+        <script>
+      function clear_from(){
+         $('#qdesc').val('');
+          $('#yiju').val('');
+          $('#qarea option').eq(0).attr("selected",true);
+          $('#qctype option').eq(0).attr("selected",true);
+          UE.getEditor('xiangqing').setContent('');
+
+      }
+		  $('.email').addClass('curli');
+          $(function(){
+            $("#close").click(function(){
+              $("#resinfo").hide();
+              clear_from();
+            })
+            $("#queding").click(function(){
+                var qdesc=$("#qdesc").val();
+                var yiju=$("#yiju").val();
+                var qctype=$("#qctype").val();
+                var qarea=$("#qarea").val();
+                var xiangqing=ue.getContent();
+                var revid="{$revid}";
+                var url="{:url('member/task/question_add')}";
+                $.post(url,{qdesc:qdesc,qctype:qctype,qarea:qarea,xiangqing:xiangqing,yiju:yiju,revid:revid},function(data){
+                    alert(data.msg);
+                });
+                clear_from();
+                $("#resinfo").hide();
+            })
+          })
+        </script>
+        <script>
+          $(window).bind('beforeunload',function(){return '关闭页面前请确保已确认评审状态，否则图片不会保存';});
+        </script>
+    </div></div></div>

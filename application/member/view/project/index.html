@@ -1,0 +1,98 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<style>
+  img{
+    width:60px;
+  }
+</style>
+<div class="title">
+  <h2>我的项目</h2>
+</div>
+  <div class="query">
+    <div class="search">
+  <form id="foodmate_search" action="" method="get">
+    <input name="kw" id="destoon_kw" type="text" class="sousuo" value="{$kw}" placeholder="请输入关键词"  x-webkit-speech="" speech=""><input class="search_s" type="submit" value=" ">
+  </form> 
+   </div> </div>
+<div class="wdxmbox">
+<div class="table-operate ue-clear">
+  <a class="jin" id="state_1" href="?state=1">进行中</a>
+  <a class="check" id="state_3" href="?state=3">已完成</a>
+  <a class="del" id="state_2" href="?state=2">已终止</a>
+</div>
+</div>
+<div class="table-box">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" class="wdwmbg" bgcolor="#c1d3de" style="border:0px;">
+  <tr>
+    <th class="operate">项目名称</th>
+    <th class="num">版本号</th>
+    <th class="num">模式</th>
+    <th class="caozuo">创建时间</th>
+    {if $state == 3 || $state == 2}
+    <th class="caozuo">{if $state ==3}完成时间{else}终止时间{/if}</th>
+    <th class="jieguo">评审结果</th>
+    <th class="num">查看报告详情</th>
+    {else}
+    <th class="jieguo">评审进度</th>
+    <th class="jieguo">评审结果</th>
+    <th class="operate">操作</th>
+    <th class="num hide">编辑</th>
+    <th class="num">查看</th>
+    {/if}
+  </tr>
+    {foreach $list as $t}
+    <tr>
+      <td bgcolor="#FFFFFF" class="operate"><a href="{:url('project/show')}?id={$t['id']}">{$t['title']}</a></td>
+      <td align="center" bgcolor="#FFFFFF">V{$t['version']}</td>
+      <td align="center" bgcolor="#FFFFFF">{$t['diy_id']?'自定义':'普通'}</td>
+      <td align="center" bgcolor="#FFFFFF">{$t['addtime']|timetodate}</td>
+      {if $state == 2 || $state == 3}
+      <td align="center" bgcolor="#FFFFFF">{$t['addtime']|timetodate}</td>
+      {/if}
+      {if $state == 1}
+      <td align="center" bgcolor="#FFFFFF">{$t['progress']}/{$t['progress_total']}</td>
+      {/if}
+      {if $state == 3}
+      <td align="center" bgcolor="#FFFFFF">{$t['result_state']|project_result_state}</td>
+      {else}
+      <td align="center" bgcolor="#FFFFFF">{$t['result_state']|project_result_state}</td>
+      {/if}
+      {if $state ==1}
+      <td align="center" bgcolor="#FFFFFF">
+      &nbsp;&nbsp;
+      {if $t['result_state'] == PROJECT_RESULT_STATE_REJECT}
+        {if $t['diy_id']}
+        <a href="{:url('project/edit')}?id={$t['id']}">重新编辑</a>
+        {else}
+        <a href="{:url('project/create')}?id={$t['id']}&op=reset">重新提交</a>
+        {/if}
+      {elseif $t['progress_total'] == 0 && $t['diy_id'] ==0}
+      	<a href="{:url('project/edit')}?id={$t['id']}">编辑</a>
+      {/if}
+      <a href="{:url('project/stop')}?id={$t['id']}" onclick="return confirm('确定终止项目吗？')">终止项目</a>
+      {if $t['diy_id']==0}
+      <a href="{:url('project/adddept')}?id={$t['id']}">添加部门</a>
+      <a href="{:url('project/adduser')}?id={$t['id']}">添加评审员</a>
+      {/if}
+      {if $t['diy_id'] && $t['diy_step'] == 0}
+      <a href="{:url('member/diy/start')}?id={$t['id']}">启动流程</a>
+      {else}
+      
+      {/if}
+      </td>
+      <td class="hide" align="center" bgcolor="#FFFFFF"><a href="{:url('project/edit')}?id={$t['id']}">编辑</a></td>
+      {/if}
+      <td align="center" bgcolor="#FFFFFF"><a href="{:url('project/show')}?id={$t['id']}">详情</a></td>
+    </tr>
+    {/foreach}
+
+</table>
+<div class="pages">
+  {$list->render()}
+</div>
+</div>
+<script type="text/javascript">
+var state = {$state};
+$('.wdxml').addClass('curli');
+$('#state_'+state).addClass('dqxm');
+</script>

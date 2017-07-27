@@ -1,0 +1,74 @@
+{php}$date_plugin = false;{/php}
+{/*处理隐藏域*/}
+{foreach $fields as $k=>$t}
+{if $t['type']=='date'}
+{php}$date_plugin = true;{/php}
+{/if}
+{if $t['type']=='hidden'}
+{if isset($t['value'])}
+<input id="{$t.name}" name="{$t.name}" type="hidden" value="{$t.value|default=''}" />
+{/if}
+{php}unset($fields[$k]);{/php}
+{/if}
+{/foreach}
+{if $date_plugin}
+<script src="__ASSETS__/plugin/My97DatePicker/WdatePicker.js" ></script>
+{/if}
+<ul class="forminfo">
+{foreach $fields as $k=>$t}
+	
+    <li>
+		<label>{$t.title}<b>{if isset($t['required']) && $t['required'] ==true}*{/if}</b></label>
+    {if $t['type']=='text'}
+        <input id="{$t.name}" name="{$t.name}" type="text" class="dfinput" value="{$t.value|default=''}" {if isset($t['disabled'])}disabled="disabled"{/if} style="width:518px;"/>
+    {elseif $t['type']=='checkbox'}
+    	<cite>
+        	{php}$check_items = is_array($t['option'])?$t['option']:$model->$t['option']();{/php}
+        	{foreach $check_items as $ok=>$ot}
+        	<input id="{$t.name}_{$ok}" name="{$t.name}[]" {if isset($t['value']) && in_array($ok,explode(',',$t['value']))}checked="checked"{/if} type="checkbox" value="{$ok|default=''}" />{$ot}
+            {/foreach}
+        </cite>
+    {elseif $t['type']=='radio'}
+    	<cite>
+        	{php}$radio_items = is_array($t['option'])?$t['option']:$model->$t['option']();{/php}
+        	{foreach $radio_items as $ok=>$ot}
+        	<input id="{$t.name}_{$ok}" name="{$t.name}" type="radio" {if !empty($t['value']) && $ok==$t['value']}checked="checked"{/if} value="{$ok|default=''}" />{$ot}
+            {/foreach}
+        </cite>
+    {elseif $t['type']=='select'}
+        <div class="vocation">
+        <select id="{$t.name}" name="{$t.name}" class="from_select">
+        {php}$select_items = is_array($t['option'])?$t['option']:$model->$t['option']();{/php}
+        {foreach $select_items as $ok=>$ot}
+        <option value="{$ok}" {if !empty($t['value']) && $ok==$t['value']}selected="selected"{/if}>{$ot}</option>
+        {/foreach}
+        </select>
+        </div>
+    {elseif $t['type']=='file'}
+    	<input id="{$t.name}" name="{$t.name}" type="text" class="dfinput" value="{$t.value|default=''}"  style="width:518px;"/>
+        <a onclick="upload_thumb('bqfile');" href="javascript:;">[上传]</a>&nbsp;&nbsp;
+        <a onclick="if(Dd('{$t.name}').value){Dd('showimg_{$t.name}').src=Dd('{$t.name}').value;}" href="javascript:;">[预览]</a>&nbsp;&nbsp;
+        <a onclick="Dd('{$t.name}').value='';Dd('showimg_{$t.name}').src='';"  href="javascript:;">[删除]</a>
+        <br>
+        <img src="" style="margin:2px;margin-left:70px" id="showimg_{$t.name}">
+    {elseif $t['type']=='date'}
+    	<input id="{$t.name}" name="{$t.name}" type="text" class="dfinput" value="{$t.value|timetodate='3'}" onfocus="WdatePicker({isShowClear:true,readOnly:true})" readonly style="width:100px;"/>
+    {elseif $t['type']=='textarea'}
+        <textarea id="{$t.name}" name="{$t.name}" style="{if !empty($t['style'])}{$t['style']}{else}width:518px;height:100px;border:solid 1px #a7b5bc;{/if}">{$t.value|default=''}</textarea>
+    {/if}
+    {if !empty($t['tip'])}
+        <i>{$t.tip}</i>
+    {/if}
+    </li>
+{/foreach}
+    <li>
+        <label>&nbsp;</label>
+        <input name="" type="submit" class="btn" value="提交"/>
+    </li>
+ 
+</ul>
+<script>
+$(document).ready(function(e) {
+	$(".from_select").uedSelect({});
+});
+</script>

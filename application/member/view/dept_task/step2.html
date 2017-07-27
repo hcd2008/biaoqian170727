@@ -1,0 +1,62 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>我的任务-&gt;汇总部门意见</h2>
+</div>
+<div class="lieb_box">
+    <style>
+    .isimg{
+      width:100%;
+    }
+    .myaa{
+      width:100px;
+      text-align: center;
+      display: inline-block;
+      background: #3497DB;
+      height:35px;
+      line-height: 35px;
+      border-radius: 4px;
+      color: #fff;
+      margin:20px auto;
+      font-size: 14px;
+    }
+    .huise{
+        width:80px;
+      text-align: center;
+      display: inline-block;
+      height:35px;
+      line-height: 35px;
+      font-size: 14px;
+    }
+ </style>
+ <h3 style="font-size:20px;text-align:center;line-height:30px;">评审过程测试 </h3>
+{foreach $review_list as $t}
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#cfcfcf" class="sylbg">
+    <tbody><tr bgcolor="#fff">
+      <th width="20%">项目评审人</th>
+      <td>{$t['realname']}</td>
+    </tr>
+    <tr bgcolor="#fff">
+      <th>评审状态</th>
+      <td>{$t['rev_state']|review_state}</td>
+    </tr>
+    <tr bgcolor="#fff">
+      <th>评审结果</th>
+      <td>{$t['rev_result_state']|review_result_state}</td>
+    </tr>
+    <tr bgcolor="#fff">
+      <th>评审意见</th>
+      <td>
+        <a target="_blank" href="{:url('task/report_detail')}?revid={$t['revid']}">查看</a>
+      </td>
+    </tr>
+</tbody></table>
+<br>
+{/foreach}
+<br>
+    <p><span style="color:#777">说明：自动汇总是将部门成员的评审信息自动汇总，您可以对评审意见进行编辑或删除图片。手动汇总需要在打开的标签评审界面进行评审。</span></p>
+  <p style="text-align:center">
+    <a href="{:url('member/deptTask/step3')}?taskid={$t['dept_taskid']}" class="myaa">汇总</a>
+  
+  </p>
+  </div>

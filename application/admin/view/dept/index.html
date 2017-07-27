@@ -1,0 +1,172 @@
+<link href="../css/select.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+<script type="text/javascript" src="../js/select-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+    $(".select1").uedSelect({
+		width : 345			  
+	});
+	$(".select2").uedSelect({
+		width : 167
+	});
+	$(".select3").uedSelect({
+		width : 100
+	});
+});
+</script>
+<div class="formbody">
+  <div id="usual1" class="usual">
+    <div class="itab">
+      <ul>
+        <li><a href="#tab1">部门管理</a></li>
+        <li><a href="#tab2">添加部门</a></li>
+        {if !empty($dept_info)}<li><a href="#tab3" class="selected">编辑部门</a></li>{/if}
+      </ul>
+    </div>
+    <div id="tab1" class="tabson">
+    <form action="" method="get">
+      <ul class="seachform">
+        <li>
+          <label>综合查询</label>
+          <input name="kw" type="text" class="scinput" />
+        </li>
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="scbtn" value="查询"/>
+        </li>
+      </ul>
+     </form>
+      <table class="tablelist">
+        <thead>
+          <tr>
+            <th width="60px"><input name="" type="checkbox" value="" checked="checked"/></th>
+            <th width="60px">ID<i class="sort"><img src="../images/px.gif" /></i></th>
+            <th>部门名称</th>
+            <th>部门电话</th>
+            <th>部门传真</th>
+            <th>部门主管</th>
+            <th width="60px">排序</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {foreach $dept_list as $k=>$t}
+          <tr>
+            <td><input name="deptid" type="checkbox" value="{$t['depid']}" /></td>
+            <td>{$t['depid']}</td>
+            <td>{$t['dept_name']}</td>
+            <td>{$t['dept_phone']}</td>
+            <td>{$t['dept_fax']}</td>
+            <td>{$t['dept_manager']|default=''}</td>
+            <td>{$t['dept_level']}</td>
+            <td>
+            	<a href="{:url('dept/delete')}?depid={$t['depid']}" onclick="return confirm('您确定删除吗？')" class="tablelink"> 删除</a>
+                <a href="{:url('dept/edit')}?depid={$t['depid']}" class="tablelink">编辑</a>
+            </td>
+          </tr>
+        {/foreach}
+        </tbody>
+      </table>
+    </div>
+    <div id="tab2" class="tabson">
+    <form method="post" action="{:url('dept/add')}">
+      <ul class="forminfo">
+        <li>
+          <label>部门名称<b>*</b></label>
+          <input name="dept_name" type="text" class="dfinput" value="{$dept_name|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门电话<b></b></label>
+          <input name="dept_phone" type="text" class="dfinput" value="{$dept_phone|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门传真<b></b></label>
+          <input name="dept_fax" type="text" class="dfinput" value="{$dept_fax|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门地址<b></b></label>
+          <input name="dept_address" type="text" class="dfinput" value="{$dept_address|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门职责<b></b></label>
+          <input name="dept_zhize" type="text" class="dfinput" value="{$dept_zhize|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门排序<b></b></label>
+          <input name="dept_level" type="text" class="dfinput" value="{$dept_level|default='0'}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="btn" value="添加"/>
+        </li>
+      </ul>
+    </form>
+    </div>
+    {if !empty($dept_info)}
+    <?php extract($dept_info); ?>
+    <div id="tab3" class="tabson">
+    <form method="post" action="{:url('dept/edit')}">
+    	<input name="depid" type="hidden" value="{$depid}">
+      <ul class="forminfo">
+        <li>
+          <label>部门名称<b>*</b></label>
+          <input name="dept_name" type="text" class="dfinput" value="{$dept_name|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+        	<label>部门主管<b>*</b></label>
+            <div class="vocation">
+        	<select name="dept_muid" class="select2">
+                <option value="0">请选择部门主管</option>
+                {foreach $member_list as $t}
+                <option value="{$t['userid']}" {if $dept_muid==$t['userid']}selected="selected"{/if}>{$t['realname']}</option>
+                {/foreach}
+        	</select>
+            </div>
+        </li>
+        <li>
+        	<label>上级部门<b></b></label>
+            <div class="vocation">
+            <select name="dept_parentid" class="select2">
+                <option value="0">请选择部门</option>
+                {foreach $dept_list as $t}
+                <option value="{$t['depid']}" {if $dept_parentid==$t['depid']}selected="selected"{/if}>{$t['dept_name']}</option>
+                {/foreach}
+            </select>
+            </div>
+        </li>
+        <li>
+          <label>部门电话<b></b></label>
+          <input name="dept_phone" type="text" class="dfinput" value="{$dept_phone|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门传真<b></b></label>
+          <input name="dept_fax" type="text" class="dfinput" value="{$dept_fax|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门地址<b></b></label>
+          <input name="dept_address" type="text" class="dfinput" value="{$dept_address|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门职责<b></b></label>
+          <input name="dept_zhize" type="text" class="dfinput" value="{$dept_zhize|default=''}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>部门排序<b></b></label>
+          <input name="dept_level" type="text" class="dfinput" value="{$dept_level|default='0'}"  style="width:518px;"/>
+        </li>
+        <li>
+          <label>&nbsp;</label>
+          <input name="" type="submit" class="btn" value="保存"/>
+        </li>
+      </ul>
+    </form>
+    </div>
+    {/if}
+  </div>
+  <script type="text/javascript"> 
+      $("#usual1 ul").idTabs(); 
+    </script> 
+  <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script> 
+</div>

@@ -1,0 +1,92 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>标签存档</h2>
+</div>
+<div class="lieb_box">
+  <h3>新建标签存档</h3>
+  <form method="post">
+  	<input type="hidden" name="id" value="{$project_info.id}">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="sylbg" style="border:0px;">
+      <tbody>
+        <tr bgcolor="#ffffff">
+          <th width="18%" align="center">项目名称</th>
+          <td width="82%" align="left">{$project_info.title}</td>
+        </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">版本</th>
+        <td width="82%" align="left">V{$project_info.version}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">归档类型</th>
+        <td width="82%" align="left">替换标签</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">替换标签</th>
+        <td width="82%" align="left">
+         {:get_archive2select('请选择','arc_replace','','class="fc" id="arc_replace"')}
+        </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">标签名称</th>
+        <td width="82%" align="left"><input type="text" name="arc_title" class="fc" size="60" value="{$project_info.title}"></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">版本号</th>
+        <td width="82%" align="left"><input type="text" name="arc_version" class="fc" size="20" value="{$project_info.version}"></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">启用日期</th>
+        <td align="left">
+          <input type="text" name="arc_enabledate" id="enabledate" value="" size="20" onFocus="WdatePicker({isShowClear:true,readOnly:true})" class="fc Wdate">
+        </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">标签文件</th>
+        <td align="left">
+        <a class="bgpic" href="{$project_info.bqfile}">{$project_info.bqfile}</a>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">所属产品</th>
+        <td align="left">
+		{:get_product2select('请选择','arc_pid','','class="fc"  id="arc_pid"')}
+        </td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">规格型号</th>
+        <td width="82%" align="left"><input type="text" name="arc_specs" class="fc" size="30" value=""></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">备注</th>
+        <td width="82%" align="left"><input type="text" name="arc_remak" class="fc" size="60"></td>
+      </tr>
+        </tbody>
+    </table>
+    <div class="pages">
+      <input type="submit" id="tijiao" class="mybtn" value="存档" onclick="return confirm('您确定提交以上内容？');">
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $('#tijiao').click(function(){
+	var arc_replace=$('#arc_replace  option:selected').text();
+	/*var arc_replace=$(".arc_replace").val();*/
+	if(arc_replace=='请选择'){
+      alert("请填写替换标签！");
+	  return false;
+   }
+   var enabledate=$("#enabledate").val();
+   if(enabledate==''){
+      alert("请填写启用时间！");
+	  return false;
+   }
+   var arc_pid=$('#arc_pid  option:selected').text();
+	/*var arc_replace=$(".arc_replace").val();*/
+	if(arc_pid=='请选择'){
+      alert("请填写所属产品！");
+	  return false;
+   }
+   
+   return true;
+});
+</script>

@@ -1,0 +1,72 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<?php if(isset($project)){extract($project);} ?>
+  <div class="title" style="border-bottom:0px;">
+    <h2>添加评审员</h2>
+  </div>
+<div class="lieb_box">
+<form  method="post">
+<input type="hidden" value="{$id}" name="id">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" class="cjxm" bgcolor="#c1d3de" style="border:0px;">
+<input type="hidden" name="xmid" value="248">
+<tbody><tr bgcolor="#ffffff">
+<th width="20%">项目名称：</th>
+<td>{$title}</td>
+</tr>
+<tr bgcolor="#ffffff">
+<th width="20%">版本号:</th>
+<td>V{$version}</td>
+</tr>
+<tr bgcolor="#ffffff">
+<th colspan="2">添加评审人员<span class="highlight"> * </span></th>
+</tr>
+{foreach $dept_group_list as $group}
+<tr bgcolor="#ffffff">
+<th width="20%">{$group['dept_name']}<span class="highlight"></span></th>
+<td>
+	{if !empty($group['member_list'])}
+    {foreach $group['member_list'] as $k=>$t}
+    <input type="checkbox" value="{$t['userid']}" {if !empty($t['locked'])}disabled="disabled"{/if} name="notice_users[]"><a class="member" href="{:userinfo_url($t['userid'])}">{$t['realname']}</a>
+    {if ($k+1)%10==0}<br>{/if}
+    {/foreach}
+    {/if}
+</td>
+</tr>
+{/foreach}
+  <tr>
+    <td colspan="2" class="cj_dbt">事务提醒</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>提醒方式</th>
+      <td>
+        {foreach $notice_type_list as $k=>$t}
+        <input type="checkbox" name="project[notice_type][]" value="{$k}">&nbsp;{$t}&nbsp;&nbsp;&nbsp;
+        {/foreach}
+      </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>增加提醒人</th>
+      <td><input type="hidden" name="notice_users_ext" class="fc" size="50" id="yxid"><span id="yxren"></span>&nbsp;<a class="chose" href="{:url('member/ext/dept_member_list')}">[+选择]</a>&nbsp;<span style="color:#888;cursor:pointer" id="qingkong">[-清空]</span></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>提醒内容</th>
+      <td>
+         <textarea name="notice_content" id="tx_content" cols="100" rows="3">{$notice_content}</textarea>
+      </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="cj_dbt">会签</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <td colspan="2">
+      <textarea name="sign" id="tarea"></textarea>
+    </td>
+  </tr></tbody></table>
+
+  
+  <div class="pages"><input name="submit" type="submit" class="mybtn" value="提交"> </div>
+  </form>
+</div>
+<script>
+$('.wdxml').addClass('curli');
+</script>

@@ -1,0 +1,52 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" />
+<div class="title">
+<h2>标签库</h2></div>
+<div class="query" style="border-bottom:0px;">
+<div class="search">
+  <form id="foodmate_search">
+    <input name="kw" type="text" class="sousuo" value="请输入关键词" onfocus="if(this.value=='请输入关键词') this.value='';" onkeyup="STip(this.value);" >
+    <input class="search_s" type="submit" value=" ">
+  </form>
+</div>
+</div>
+<div class="lieb_box">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" class="wdwmbg" bgcolor="#c1d3de" style="border:0px;">
+  <tr>
+    <th align="center" bgcolor="#ffffff" width="30%">
+      <strong>标签名称</strong></th>
+    <th align="center" bgcolor="#ffffff" width="5%">
+      <strong>版本号</strong></th>
+    <th align="center" bgcolor="#ffffff" width="10%">
+      <strong>版本名称</strong></th>
+    <th align="center" bgcolor="#ffffff" width="10%">
+      <strong>存档时间</strong></th>
+    <th align="center" bgcolor="#ffffff" width="10%">
+      <strong>历史版本</strong></th>
+    <th align="center" bgcolor="#ffffff" width="10%">
+      <strong>评审过程</strong></th>
+    <th align="center" bgcolor="#ffffff" width="10%">
+      <strong>下载标签</strong></th>
+  </tr>
+  {foreach $project_list as $t}
+  <tr>
+    <td align="center" bgcolor="#FFFFFF">{$t['arc_title']}</td>
+    <td align="center" bgcolor="#FFFFFF">V{$t['version']}</a></td>
+    <td align="center" bgcolor="#FFFFFF">{$t['arc_version']}</a></td>
+    <td align="center" bgcolor="#FFFFFF">{$t['arc_addtime']|timetodate}</td>
+    <td align="center" bgcolor="#FFFFFF">
+      <a href="{:url('member/label/history')}?proid={$t['arc_proid']}">历史版本</a></td>
+    <td align="center" bgcolor="#FFFFFF">
+      <a href="{:url('member/label/show')}?proid={$t['arc_proid']}">查看</a></td>
+    <td align="center" bgcolor="#FFFFFF">
+      <a target="_blank" href="{:url('member/label/down')}?arcid={$t['arcid']}">下载</a></td>
+  </tr>
+  {/foreach}
+</table>
+<div class="pages">
+{$project_list->render()}
+</div>
+</div>
+<script>
+$('.nav-info').addClass('curli');
+</script>

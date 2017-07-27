@@ -1,0 +1,35 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title">
+    <h2>部门工作</h2>
+  </div>
+  <div class="topcd">
+    <ul>
+      <li><a class="cur" href="?file=dept">处理申请</a></li>
+      <li class="hide"><a href="?file=dept&amp;action=dept_xm">部门项目</a></li>
+      <li class="hide"><a href="?file=dept&amp;action=dept_tj">统计汇总</a></li>
+    </ul>
+  </div>
+  <div class="lieb_box">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="bmgz wdwmbg" style="border:0px;">
+	<tr>
+      <th>申请项目</th>
+      <th width="10%">申请人</th>
+      <th width="15%">申请时间</th>
+      <th width="8%">状态</th>
+      <th width="10%">处理/查看</th>
+	</tr>
+    {foreach $check_list as $t}
+    <tr bgcolor="#fff">
+        <td>{$t['title']}</td>
+        <td align="center"><a class="member" href="{:userinfo_url($t['userid'])}">{$t['realname']}</a></td>
+        <td align="center">{$t['check_addtime']|timetodate}</td>
+        <td align="center">{$t['check_result_state']|check_result_state}</td>
+        <td align="center"><a href="{:url('member/deptJob/show')}?checkid={$t['checkid']}">查看</a></td>
+    </tr>
+    {/foreach}
+    </table>
+  </div> 
+<script type="text/javascript">
+$('.agency').addClass('curli');
+</script>  

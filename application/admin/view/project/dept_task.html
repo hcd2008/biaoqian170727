@@ -1,0 +1,35 @@
+<?php extract($item); ?>
+<table class="tablelist tb2">
+	<caption>{$dept_name}</caption>
+  <thead>
+    <tr>
+      <th>评审人</th>
+      <th>评审状态</th>
+      <th>评审结果</th>
+      <th>分配时间</th>
+      <th>提交时间</th>
+      <th>操作</th>
+
+    </tr>
+  </thead>
+  <tbody>
+  {if !empty($items)}
+  {foreach $items as $k=>$t}
+    <tr>
+      <td>{$t['realname']}</td>
+      <td>{$t['rev_state']|review_state}</td>
+      <td>{$t['rev_result_state']|review_result_state}</td>
+      <td>{$t['rev_addtime']|timetodate}</td>
+      <td>{$t['rev_report_time']|timetodate}</td>
+      <td><a href="{:url('project/report_detail')}?revid={$t['revid']}" class="tablelink layer_open">详情</a></td>
+    </tr>
+  {/foreach}
+  {/if}
+  <tr>
+  	<td colspan="6" class="cen"><a href="javascript:;" onclick="$('#dept_task_list').empty()">收起</a></td>
+  </tr>
+  </tbody>
+</table>
+<script type="text/javascript">
+$('.tb2 tr:odd').addClass('odd');
+</script>

@@ -1,0 +1,62 @@
+<style>
+.tablelist tbody tr td{
+border-bottom:solid 1px #c7c7c7;
+}
+</style>
+<div class="mainindex">
+  <div class="welinfo"> <span><img src="../images/sun.png" alt="天气"></span> <b>{$_realname}，欢迎使用{$ST.sitename}</b> </div>
+  <div class="welinfo">
+    <span><img src="../images/time.png" alt="时间"></span>
+    <i id="times"></i>
+    </div>
+  <div class="xline"></div>
+  <div class="uimakerinfo"><b>正在进行中的项目...</b></div>
+  <table class="tablelist">
+    <thead>
+      <tr>
+        <th>类型</th>
+        <th>名称</th>
+        <th>产品</th>
+        <th class="cen">版本</th>
+        <th class="cen">进度</th>
+        <th class="cen">创建时间</th>
+        <th class="cen">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+    {if !empty($items)}
+    {foreach $items as $k=>$t}
+    <tr>
+      <td>{$t['type']}</td>
+      <td>{$t['title']}</td>
+      <td>{$t['proname']}</td>
+      <td class="cen">V{$t['version']}</td>
+      <td class="cen">{$t['progress']}/{$t['progress_total']}</td>
+      <td class="cen">{$t['addtime']|timetodate}</td>
+      <td class="cen"><a href="{:url('project/report')}?id={$t['id']}" class="tablelink">查看详情</a></td>
+    </tr>
+    {/foreach}
+    {/if}
+    </tbody>
+    
+  </table>
+</div>
+<script type="text/javascript">
+//$('.tablelist tr:odd').addClass('odd');
+
+var t = null;
+time();
+function time(){
+   clearTimeout(t);
+   dt = new Date();
+   var y= dt.getFullYear(),
+    m = dt.getMonth()+1,
+    d = dt.getDate(),
+    h=dt.getHours(),
+    i=dt.getMinutes(),
+    s=dt.getSeconds();
+   document.getElementById("times").innerHTML =  "现在时间："+y+'年'+m+'月'+d+'日'+h+"时"+i+"分"+s+"秒";
+   t = setTimeout(time,1000);
+} 
+</script>

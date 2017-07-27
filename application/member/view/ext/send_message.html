@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>发送消息提醒</title>
+<link href="__ASSETS__/css/main.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" /> 
+<link href="__ASSETS__/css/bq.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" /> 
+<script type="text/javascript" src="__ASSETS__/script/jquery.js"></script>
+<script src="__ASSETS__/script/layer/layer.js"></script>
+<script src="__ASSETS__/script/bq.js"></script>
+<style>
+#container{
+width:1000px;
+margin:20px auto;
+position: relative;
+}
+#vae{
+width:90%;
+margin:0 auto;
+border-collapse: collapse;
+}
+.th{
+background: #E3EFF6;
+width:120px;
+}
+#vae td,#vae th{
+border:1px solid #ccc;
+padding:10px;
+}
+</style>
+</head>
+<body>
+<div id="container">
+<form action="" method="post">
+<table id="vae">
+<input type="hidden" name="userid" value="{$userid|default=''}">
+   <tr bgcolor="#ffffff">
+       <th class="th">提醒方式</th>
+       <td>
+         <input type="checkbox" name="notice_type[]" value="1">&nbsp;站内信&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="notice_type[]" value="2">&nbsp;邮件
+       </td>
+   </tr>
+   <tr bgcolor="#ffffff">
+       <th class="th">增加提醒人</th>
+       <td><input type="hidden" name="users" class="fc" size="30" id="yxid"><span id="yxren"></span>&nbsp;&nbsp;<a class="chose" href="{:url('member/ext/dept_member_list')}">[+选择]</a>&nbsp;<span style="color:#888;cursor:pointer" id="qingkong">[-清空]</span></td>
+   </tr>
+   <tr bgcolor="#ffffff">
+       <th class="th">提醒内容</th>
+       <td>
+          <textarea name="notice_content" id="tx_content" cols="50" rows="3">{$notice_text|default=''}</textarea>
+       </td>
+   </tr>
+</table>
+<div class="pages"><input name="submit" type="submit" class="mybtn" value="发送" /> </div>
+</form>
+</div>
+</body>
+</html>

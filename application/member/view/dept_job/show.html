@@ -1,0 +1,131 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<?php extract($project); ?>
+<div class="title">
+  <h2>部门工作--审批提交报告</h2>
+</div>
+<div class="topcd">
+  <ul>
+    <li><a class="cur">处理申请</a></li>
+    <li><a href="{:url('member/deptJob/index')}">部门项目</a></li>
+  </ul>
+</div>
+<div class="lieb_box">
+  <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="bmgz" style="border:0px;">
+    <tbody>
+      <tr bgcolor="#ffffff">
+        <th width="100%" align="center" colspan="4" class="bm_dbt">项目信息</th>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">项目名称</th>
+        <td width="82%" align="left" colspan="3">{$title}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%" align="center">创建人(部门)</th>
+        <td width="82%" align="left" colspan="3"><a href="{:userinfo_url($userid)}" class="member">{$userinfo_ext}</a></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center" width="18%">项目类型</th>
+        <td align="left" width="32%">{$type|label_type}</td>
+        <th align="center" width="18%">所属产品</th>
+        <td align="left" width="32%">{$project_id|get_product_name}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center" width="18%">所属模型</th>
+        <td align="left" width="32%"></td>
+        <th align="center" width="18%">创建时间</th>
+        <td align="left" width="32%">{$addtime|timetodate}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center" width="18%">当前版本</th>
+        <td align="left" width="32%">V{$version}</td>
+        <th align="center" width="18%">当前状态</th>
+        <td align="left" width="32%">{$state|project_state_icon}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th align="center">项目描述</th>
+        <td align="left" colspan="3">{$id|get_project_data}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="bmgz" style="border:0px;">
+    <tbody>
+      <tr bgcolor="#ffffff">
+        <th width="100%" align="center" colspan="2" class="bm_dbt">部门汇总结果</th>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%">汇总结果</th>
+        <td><span style="color:green">{$task_info['task_result_state']|dept_task_result_state}</span></td>
+      </tr>
+    </tbody>
+  </table>
+  {foreach $review_list as $t}
+  <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="bmgz" style="border:0px;">
+    <tbody>
+      <tr bgcolor="#ffffff">
+        <th width="100%" align="center" colspan="2" class="bm_dbt">{$t['rev_realname']}-评审报告</th>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th width="18%">评审人</th>
+        <td><a href="{:userinfo_url($t['rev_userid'])}" class="member">{$t['rev_realname']}</a></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th>评审时间</th>
+        <td>{$t['rev_report_time']|timetodate}</td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th>评审结果</th>
+        <td><span style="color:green">{$t['rev_result_state']|review_result_state}</span></td>
+      </tr>
+      <tr bgcolor="#ffffff">
+        <th>评审图片</th>
+        <td><a class="bgpic" href="{$t['rev_attach']}">点击查看</a></td>
+      </tr>
+    </tbody>
+  </table>
+  {/foreach}
+  <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="bmgz" style="border:0px;">
+    <tbody>
+      <tr bgcolor="#ffffff">
+        <th width="100%" align="center" colspan="2" class="bm_dbt">处理申请</th>
+      </tr>
+      <tr bgcolor="#F7F6F6">
+        <td>
+        <ul bgcolor="#ffffff">
+            <li class="myli1">{$check_realname} 于 {$check_addtime|timetodate} 发送提交报告申请：</li>
+            <li class="myli2">{$check_content}</li>
+         </ul>
+      </tr>
+      <tr bgcolor="#FFF">
+        <td>
+        <ul bgcolor="#ffffff">
+            <li class="myli1">您的审批意见：{if $check_result_state==CHECK_RESULT_STATE_REJECT}拒绝{else}同意{/if}</li>
+            <li class="myli2">{$check_tocontent}</li>
+         </ul>
+      </tr>
+      <tr bgcolor="#fff">
+        <td>
+        <div class="huifu">
+        	{if $check_result_state == 0}
+            <form method="post" onsubmit="return confirm('您确定要提交？');">
+              <input type="hidden" name="checkid" value="{$checkid}">
+              您的意见：
+              <input type="radio" name="check_result_state" checked="checked" value="1">
+              &nbsp;同意&nbsp;&nbsp;
+              <input type="radio" name="check_result_state" {if $check_result_state==CHECK_RESULT_STATE_REJECT}checked="checked"{/if} value="0">
+              &nbsp;拒绝 <br>
+              <textarea name="check_tocontent" id="py"></textarea>
+              <div class="pages">
+                <input type="submit" value="提交" name="submit" class="mybtn">
+              </div>
+            </form>
+            {/if}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<script type="text/javascript">
+$('.agency').addClass('curli');
+</script> 

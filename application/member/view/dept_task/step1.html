@@ -1,0 +1,56 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title" style="border-bottom:0px;">
+  <h2>我的任务-&gt;分配任务</h2>
+</div>
+<div class="lieb_box">
+    <form action="" method="post">
+    <input type="hidden" name="taskid" value="{$project.taskid}">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+      <tbody><tr class="mytr">
+          <td colspan="2">&nbsp;&nbsp;确认评审人员</td>
+        </tr>
+        <tr bgcolor="#ffffff">
+          <th width="20%">项目名称</th>
+          <td>{$project.title}</td>
+        </tr>
+        <tr bgcolor="#ffffff">
+          <th width="20%">确认评审人员</th>
+        	<td>
+        	{foreach $member_list as $t}
+            <input type="checkbox" name="notice_users[]" value="{$t['userid']}" {if !empty($t['locked'])}disabled="disabled"{else}{/if}>&nbsp;{$t['realname']}&nbsp;&nbsp;&nbsp;
+        	{/foreach}
+            </td>
+        </tr>
+       <tr>
+    <td colspan="2" class="cj_dbt">事务提醒</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>提醒方式</th>
+      <td>
+      	{foreach $notice_type_list as $k=>$t}
+        <input type="checkbox" name="notice_type[]" value="{$k}">&nbsp;{$t}&nbsp;&nbsp;&nbsp;
+        {/foreach}
+      </td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>增加提醒人</th>
+      <td><input type="hidden" name="notice_users_ext" class="fc" size="50" id="yxid"><span id="yxren"></span>&nbsp;&nbsp;<a class="chose" href="{:url('member/ext/dept_member_list')}">[+选择]</a>&nbsp;<span style="color:#888;cursor:pointer" id="qingkong">[-清空]</span></td>
+  </tr>
+  <tr bgcolor="#ffffff">
+      <th>提醒内容</th>
+      <td>
+         <textarea name="notice_content" id="notice_content" cols="100" rows="3">《{$project.title}》标签评审项目已经由本部门标签评审负责人{$project.userinfo_ext}分配给您，请您及时进行标签评审。({:timetodate(TIMES)})</textarea>
+      </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="cj_dbt">会签</td>
+  </tr>
+  <tr bgcolor="#ffffff">
+    <td colspan="2">
+      <textarea name="sign" id="tarea"></textarea>
+    </td>
+  </tr>    </tbody></table>
+    <div class="pages"><input name="submit" type="submit" class="mybtn" value="提交"> </div>
+    </form>
+   </div>

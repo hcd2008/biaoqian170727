@@ -1,0 +1,25 @@
+{layout name="layout" /}
+<link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all">
+<div class="title" style="border-bottom:0px;">
+  <h2>存档管理--选择存档类型</h2>
+</div>
+<div class="lieb_box">
+  <form method="post">
+  	<input name="id" type="hidden" value="{$project_info['id']}">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="sylbg" style="border:0px;">
+      <tr bgcolor="#fff">
+        <th width="20%">选择存档类型</th>
+        <td><input type="radio" name="type" value="1">
+          新建标签&nbsp;
+          <input type="radio" name="type" value="2">
+          代替标签&nbsp;</td>
+      </tr>
+    </table>
+    <div class="pages">
+      <input type="submit" class="mybtn" value="下一步">
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+$('.office').addClass('curli');
+</script>

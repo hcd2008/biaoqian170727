@@ -1,0 +1,97 @@
+{layout name="layout" /}
+
+<style type="text/css">
+.sys_upload{padding: 10px;}
+.sys_upload ul li{padding: 10px;}
+.sys_upload ul li .sys_btn{padding: 2px;width: 70px;}
+</style>
+<div id="right">  <link href="__ASSETS__/css/info-mgt.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all"> 
+<div class="title" style="border-bottom:0px;">
+  <h2>修改标签</h2>
+</div>
+
+<form id="form1" name="form1" method="post" action="{:url('member/Jiancha/edit')}">
+<input hidden="hidden" type="hidden" name="chanpinid" id="chanpinid" value="{$chanpinid}" />
+<table  width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#c1d3de" class="cjxm">
+  <tbody  id="e">
+  <tr id="option0">
+    <td colspan="2" class="cj_dbt">修改标签</td>
+  </tr>
+ <tr id="" bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>所属产品</th>
+    <td align="left">
+      {$proname}
+    </td>
+  </tr>
+  <tr  id="psry" bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>评审人员</th>
+    <td align="left">
+      <select name="userid" id="userid" class="fc">
+       
+       {volist name='member_list' id='vo_pro'}
+          <option value="{$vo_pro.userid}">{$vo_pro.realname}</option>
+        {/volist}
+        
+
+        </select>
+    </td>
+  </tr>
+
+   
+   
+   <tr id="option1" bgcolor="#ffffff">
+    <th width="20%">检查项</th>
+    <td>
+          <label><input type="text" style="width:500px; height:21px; line-height:21px;" name="jianchaxiang[]"  value="" />
+          </label>
+      </td>
+  </tr>
+  </tbody>
+  <tr  bgcolor="#ffffff">
+        <td colspan="2" class="cj_dbt">
+        <input type="button" name="tianja" onclick="addRow()" value="增加" >
+        <input type="submit" value="提交">
+        </td>
+  </tr>
+  </table>
+
+<script type="text/javascript">
+
+var rowCount=1;  //行数默认4行  
+  
+//添加行  
+function addRow(){  
+    rowCount++;  
+    var newRow='<tr bgcolor="#ffffff"  id="option'+rowCount+'"><th width="20%">检查项</th><td id="qq" align="left"><input style="width:500px;height:21px; line-height:21px;" type="text"  name="jianchaxiang[]"><a href="#" onclick=delRow('+rowCount+')>删除</a></td></tr>';  
+    $('#e').append(newRow);  
+}  
+   
+ function delRow(rowIndex){  
+    $("#option"+rowIndex).remove();  
+    rowCount--;  
+}  
+
+</script>
+<script type="text/javascript">
+  function delRow1(rowIndex){  
+    $("#shan"+rowIndex).remove();  
+    
+}  
+</script>
+<script type="text/javascript">
+   $(document).ready(function(e) {
+                  function load_cat123(){
+                      var userid=$("#userid").val();
+
+                      var chanpinid=$("#chanpinid").val();
+                      $.post("{:url('member/Jiancha/jianchaxiang')}",{userid:userid,chanpinid:chanpinid},function(data){
+                        $(".qingchu").empty();
+                        $('#psry').after(data).html();
+                      });  
+                      }
+                  load_cat123();
+                  $("#userid").change(load_cat123);
+                  });
+</script>
+</form>
+</div>

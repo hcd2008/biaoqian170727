@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>标签评审协作管理系统</title>
+    <link href="__ASSETS__/css/main.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" />
+    <link href="__ASSETS__/css/index.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" />
+    <link href="__ASSETS__/css/jquery.dialog.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="__ASSETS__/script/config.js"></script>
+    <script type="text/javascript" src="__ASSETS__/script/jquery.js"></script>
+    <script type="text/javascript" src="__ASSETS__/script/common.js"></script>
+    <script type="text/javascript" src="__ASSETS__/script/page.js"></script>
+    <script type="text/javascript" src="__ASSETS__/script/lang.js"></script>
+    <script type="text/javascript" src="__ASSETS__/script/sys_common.js"></script>
+    <script type="text/javascript" src="__ASSETS__/script/layer/layer.js"></script>
+    <script type="text/javascript" src="__ASSETS__/plugin/My97DatePicker/WdatePicker.js"></script>
+    <script src="__ASSETS__/script/bq.js"></script>
+    <script>$(function() {
+        var height = $("#right").outerHeight();
+        $("#left").height(height);
+      })</script>
+  </head>
+  <style>
+    .tixing{ width:18px; height:18px; line-height: 18px; position: relative; top:-5px; display: inline-block; border-radius: 5px; font-size: 12px; background: red; color:#fff; text-align: center; }
+    .hide{display: none;}
+  </style>
+  <body>
+    <div id="hd">
+      <div class="hd-wrap ue-clear">
+        <div class="top-light"></div>
+        <h1 class="logo"></h1>
+        <div class="login-info ue-clear">
+          <div class="welcome ue-clear">
+            <span>欢迎您,</span>{$_username}</div>
+          <div class="login-msg ue-clear">
+            <a href="{:url('member/message/index')}" class="msg-txt">站内信</a>
+            {if $_newpm}
+            <a href="{:url('member/message/index')}" class="tixing">{$_newpm}</a>
+            {/if}
+          </div>
+        </div>
+        <div class="toolbar ue-clear">
+          <a href="{:url('/member/label/daiban')}" class="home-btn">首页</a>
+          <a href="{:url('member/login/logout')}" class="quit-btn exit">退出</a></a>
+        </div>
+      </div>
+    </div>
+    <div id="bd">
+      <div class="wrap ue-clear">
+        <div class="sidebar">
+          <h2 class="sidebar-header">
+            <p>功能导航</p>
+          </h2>
+          <ul class="nav">
+          {if isset($auths['project'])}
+            <li class="gongwen ">
+              <div class="nav-header">
+                <a href="{:url('member/project/create')}">
+                  <span>创建项目</span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+            <li class="wdxml ">
+              <div class="nav-header">
+                <a href="{:url('member/project/index')}">
+                  <span>我的项目&nbsp;<b class="tixing hide" id="tip_project">0</b></span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+          {/if}
+          {if isset($auths['dept_task'])}
+            <li class="konwledge ">
+              <div class="nav-header">
+                <a href="{:url('member/deptTask/index')}">
+                  <span>我的任务&nbsp;<b class="tixing hide" id="tip_dept_task">1</b></span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+           {/if}
+           {if isset($auths['dept_job'])}
+            <li class="agency ">
+              <div class="nav-header">
+                <a href="{:url('member/deptJob/index')}">
+                  <span>部门工作&nbsp;<b class="tixing hide" id="tip_dept_check">1</b></span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+           {/if}
+           {if isset($auths['task'])}
+            <li class="email ">
+              <div class="nav-header">
+                <a href="{:url('member/task/index')}">
+                  <span>标签评审&nbsp;<b class="tixing hide" id="tip_task">1</b></span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+            {/if}
+            <li class="zhuanj hide">
+              <div class="nav-header">
+                <a href="{:url('member/review/turn')}">
+                  <span>转交评审</span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+           {if isset($auths['project'])}
+            <li class="office">
+              <div class="nav-header">
+                <a href="{:url('member/archive/index')}">
+                  <span>标签存档&nbsp;<b class="tixing hide" id="tip_archive">1</b></span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+            {/if}
+            <li class="nav-info">
+              <div class="nav-header">
+                <a href="{:url('member/label/index')}">
+                  <span>标签库</span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+            {if isset($auths['project'])}
+            <li class="system">
+              <div class="nav-header">
+                <a href="{:url('member/diy/index')}">
+                  <span>自定义流程</span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+            {/if}
+            {if $_js_check==1}<!-- 判断$_js_check==1时才能有这个-->
+               <li class="nav-info">
+              <div class="nav-header">
+                <a href="{:url('member/Jiancha/index')}">
+                  <span>检查表管理</span>
+                  <i class="icon"></i>
+                </a>
+              </div>
+            </li>
+            {/if}
+          </ul>
+        </div>
+        <div id="right">
+        {__CONTENT__}
+        </div>
+      </div>
+    </div>
+    <div id="footer">技术支持：食品伙伴网</div></body>
+<script type="text/javascript">
+$.getJSON("{:url('member/ext/menuRemind')}",function(o){
+  for(key in o){
+    if(o[key]>0){
+      $('#tip_'+key).removeClass('hide').text(o[key]);
+    }
+  }
+});
+</script>
+</html>

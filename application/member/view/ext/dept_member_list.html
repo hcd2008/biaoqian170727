@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>人员列表</title>
+<script type="text/javascript" src="__ASSETS__/script/jquery.js"></script>
+<script src="__ASSETS__/script/layer/layer.js"></script>
+<script src="__ASSETS__/script/bq.js"></script>
+<script>
+var hid = '{$hid}';
+var sid ='{$sid}';
+$(function(){
+	$(".dept").click(function(){
+		var m=$(this).parents(".list").find(".mymember");
+		var j=$(this).find(".jia");
+		if(m.is(":hidden")){
+			m.show();
+			j.text("+");
+		}else{
+			m.hide();
+			j.text("-");
+		}
+	})
+	$("#queding").click(function(){
+		var ids='';
+		var ming='';
+		var l=$(":checkbox:checked").length;
+		if(l==0){
+			alert("请选择用户");
+			return false;
+		}
+		$("#container").find(":checkbox:checked").each(function(){
+			ids=ids+','+$(this).val();
+			ming=ming+','+$(this).attr('alt');
+		})
+		ids=ids.substr(1);
+		ming=ming.substr(1);
+		parent.document.getElementById(hid).value=ids;
+		parent.document.getElementById(sid).innerHTML=ming;
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index);
+	})
+
+})
+</script>
+<script>
+$(function(){
+	$(".dept1").click(function(){
+		var m=$(this).parents(".list1").find(".mymember1");
+		var j=$(this).find(".jia1");
+		if(m.is(":hidden")){
+			m.show();
+			j.text("+");
+		}else{
+			m.hide();
+			j.text("-");
+		}
+	})
+	$("#queding1").click(function(){
+		var ids='';
+		var ming='';
+		var l=$(":checkbox:checked").length;
+		if(l==0){
+			alert("请选择用户");
+			return false;
+		}
+		$("#container").find(":checkbox:checked").each(function(){
+			ids=ids+','+$(this).val();
+			ming=ming+','+$(this).attr('alt');
+		})
+		ids=ids.substr(1);
+		ming=ming.substr(1);
+		parent.document.getElementById("ldid").value=ids;
+		parent.document.getElementById("yxld").innerHTML=ming;
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index);
+	})
+})
+</script>
+<style>
+#contaienr{
+width:600px;
+margin:20px auto;
+padding:20px;
+font-size: 13px;
+}
+.dept{
+font-size: 13px;
+}
+.mymember {display: none;}
+.mymember ul li{
+	float: left;
+	width: 20%;
+	font-size: 12px;
+}
+.myli{
+font-size: 13px;
+}
+.list{
+margin: 10px 0;
+margin-left: 50px;
+}
+ul li{
+list-style: none;
+line-height: 30px;
+}
+#queding{
+margin:5px auto;
+width:60px;
+text-align: center;
+background: #3497DB;
+height:30px;
+line-height: 30px;
+border-radius: 3px;
+font-size: 13px;
+color: #fff;
+cursor: pointer;
+}
+.dept1{
+font-size: 14px;
+}
+.mymember1{
+display: none;
+}
+.myli1{
+font-size: 13px;
+}
+.list1{
+margin-left: 50px;
+}
+
+#queding1{
+margin:5px auto;
+width:60px;
+text-align: center;
+background: #3497DB;
+height:30px;
+line-height: 30px;
+border-radius: 3px;
+font-size: 13px;
+color: #fff;
+cursor: pointer;
+}
+h3,ul{margin: 0;}
+
+</style>
+</head>
+<body>
+<div id="container">
+{foreach $dept_list as $t}
+<div class="list">
+<h3 class="dept"><span class="jia">+</span>&nbsp;{$t['dept_name']}</h3>
+<div class="mymember">
+<ul>
+	{if isset($t['member_list'])}
+	{foreach $t['member_list'] as $user}
+	<li><input type="checkbox" class="mm" value="{$user['userid']}" alt="{$user['username']}"><span class="mingzi">{$user['realname']}</span></li>
+	{/foreach}
+	{else}
+	<li>无人员</li>
+	{/if}
+</ul>
+</div>
+</div>
+<div style="clear:both"></div>
+{/foreach}
+<div id="queding">确定</div>
+</div>
+</body>
+</html>
