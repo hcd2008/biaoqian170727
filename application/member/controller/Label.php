@@ -103,7 +103,7 @@ class Label EXTENDS Member
             'proid' =>  $proid,
             'state' =>  PROJECT_STATE_END,
         ])->order('version ASC')->select();
-        
+        // print_r($items);
         foreach ($items as $k => $v) {
             $v = $v->toArray();
             if($v['diy_id']){
@@ -114,6 +114,8 @@ class Label EXTENDS Member
             }
             $lists[] = $v;
         }
+        // print_r($lists);exit;
+        $output['proid']=$proid;
         $output['items'] = $lists;
         return $this->fetch('',$output);
     }
@@ -146,7 +148,8 @@ class Label EXTENDS Member
             'dept_taskid'   =>  0,
         ];
         $items = [];
-        $items = Db::view('task','*')->view('member','realname','rev_userid=userid','LEFT')->where($map)->select();
+        // $items = Db::view('task','*')->view('member','realname','rev_userid=userid','LEFT')->where($map)->select();
+        $items=Db::name('task')->where('project_id',$id)->select();
         return $items;
     }
 

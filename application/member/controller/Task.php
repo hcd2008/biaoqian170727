@@ -48,9 +48,15 @@ class Task EXTENDS Member
 
     //评审
     public function step1($revid){
+        $param=$this->request->param();
         $output = [];
         /* 2017.4.6 评审*/
         $anew=$this->GET['anew'];
+        //重新评审则删除信息 by hcd 20710728
+        if($anew){
+            Db::name('task_file')->where('rev_userid',$this->_userid)->where('revid',$param['revid'])->delete();
+            Db::name('task_question')->where('qs_userid',$this->_userid)->where('revid',$param['revid'])->delete();
+        }
 
         $pingshen=$this->model_task_file->pingShen($revid,$this->_userid);
         $arr=array();
@@ -115,7 +121,7 @@ class Task EXTENDS Member
         
         $output['bb']=$bb;
         //图片及附件 by hcd 0713
-        $filearr=Db::name('project_file')->where('proid',$proid)->order('id')->select();
+        $filearr=Db::name('project_file')->where('proid',$proid)->where('version',$param['banb'])->order('id')->select();
         $filelist=array();
         foreach($filearr as $kk=>$vv){
             //查一下已经评审的信息数量
@@ -188,7 +194,7 @@ class Task EXTENDS Member
         $proinfo=Db::name('project')->where('id',$pid)->find();
         $proid=$proinfo['proid'];
         //图片及附件 by hcd 0713
-        $filearr=Db::name('project_file')->where('proid',$proid)->order('id')->select();
+        $filearr=Db::name('project_file')->where('proid',$proid)->where('version',$param['banb'])->order('id')->select();
         $filelist=array();
         foreach($filearr as $kk=>$vv){
             //查一下已经评审的信息数量
@@ -247,7 +253,7 @@ class Task EXTENDS Member
         $proinfo=Db::name('project')->where('id',$pid)->find();
         $proid=$proinfo['proid'];
         //图片及附件 by hcd 0713
-        $filearr=Db::name('project_file')->where('proid',$proid)->order('id')->select();
+        $filearr=Db::name('project_file')->where('proid',$proid)->where('version',$param['banb'])->order('id')->select();
         $filelist=array();
         foreach($filearr as $kk=>$vv){
             //查一下已经评审的信息数量
@@ -437,7 +443,7 @@ class Task EXTENDS Member
 
         unset($data['rev_userid']);
         Db::name('task')->where('revid',$revid)->where('rev_userid',$this->_userid)->update($data);
-        $this->success('操作成功');
+        $this->success('操作成功','member/task/index');
     }
     //提交报告
     public function step3($revid){
@@ -502,11 +508,13 @@ class Task EXTENDS Member
         // return $this->fetch('',$output);
         $param=$this->request->param();
         isset($param['revid']) or $this->error('非法访问');
+        $uid=isset($param['userid'])?$param['userid']:$this->_userid;
         //总体评价
-        $ztres=Db::name('task')->where('revid',$param['revid'])->where('rev_userid',$this->_userid)->find();
+        $ztres=Db::name('task')->where('revid',$param['revid'])->where('rev_userid',$uid)->find();
         $this->assign('ztres',$ztres);
+        
         //各个文件评价
-        $reslists=Db::name('task_file')->where('revid',$param['revid'])->where('rev_userid',$this->_userid)->select();
+        $reslists=Db::name('task_file')->where('revid',$param['revid'])->where('rev_userid',$uid)->select();
         $newlist=array();
         foreach ($reslists as $k => $v) {
             $img=$v['rev_attach'];
@@ -519,7 +527,7 @@ class Task EXTENDS Member
                 }
             }
             //评审详情
-            $psdetail=Db::name('task_question')->where('fileid',$v['fid'])->where('revid',$v['revid'])->where('qs_userid',$this->_userid)->order('qsid')->select();
+            $psdetail=Db::name('task_question')->where('fileid',$v['fid'])->where('revid',$v['revid'])->where('qs_userid',$uid)->order('qsid')->select();
             $v['question']=$psdetail;
             $newlist[]=$v;
         }

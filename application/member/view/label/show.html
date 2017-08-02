@@ -57,10 +57,13 @@
         <p>
           <span class="bumen">[流程{$k1}]</span>&nbsp;
           {foreach $v1['depts'] as $k2=>$v2}
-          <a target="_blank" href="{:url('task/report_detail')}?revid={$v2['revid']}">{$v2.dept_name}</a>&nbsp;&nbsp; 
+          {$v2.dept_name}:&nbsp;&nbsp; 
+            {foreach $v2['member'] as $k3=>$v3}
+                <a href="{:url('member/task/report_detail',array('revid'=>$v3['revid'] ,'userid'=>$v3['rev_userid']))}">{$v3['realname']}</a>
+            {/foreach}
           {/foreach}
           {foreach $v1['users'] as $k3=>$v3}
-          <a target="_blank" href="{:url('task/report_detail')}?revid={$v3['revid']}">{$v3.realname}</a>&nbsp;&nbsp; 
+          <a target="_blank" href="{:url('task/report_detail')}?revid={$v3['revid']}&userid={$v4['rev_userid']}">{$v3.realname}</a>&nbsp;&nbsp; 
           {/foreach}
         </p>
         {/foreach}
@@ -80,7 +83,7 @@
     	  <p>
           <span class="bumen">个人评审：</span>&nbsp;
         	{foreach $t['member_task_list'] as $mk=>$mt}
-          	<a target="_blank" href="{:url('task/report_detail')}?revid={$mt['revid']}">{$mt.realname}</a>&nbsp;&nbsp; 
+          	<a target="_blank" href="{:url('task/report_detail')}?revid={$mt['revid']}&userid={$mt['rev_userid']}">{$mt.realname}</a>&nbsp;&nbsp; 
           {/foreach}
   	    {/if}
       {/if}

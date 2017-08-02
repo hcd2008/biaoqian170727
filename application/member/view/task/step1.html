@@ -400,8 +400,9 @@
                   $("#chanpinid1").change(load_cat);
                   });
             </script> -->
-
+          
             <div id="tasklist">
+              <div id="shouqi"><img src="__ASSETS__/image/shouqi.png" title='收起附件' width="40px"></div>
               <table class="tasktb">
                 <tr>
                   {volist name="files" id="vo"}
@@ -432,6 +433,13 @@
                 </tr>
               </table>
             </div>
+            <script>
+              $(function(){
+                $("#shouqi").click(function(){
+                  $(".tasktb").toggle();
+                })
+              })
+            </script>
 </body>
 
 </html>

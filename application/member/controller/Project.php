@@ -52,22 +52,25 @@ class Project EXTENDS Member
             $arr['version']=$version;
             $arr['proid']=$proid;
             $files=$this->request->file();
-            
-            foreach ($files as $file) {
-                // 移动到框架应用根目录/public/uploads/ 目录下
-                $info = $file->validate(['ext'=>'png,jpg,gif,doc,docx'])->move(ROOT_PATH . 'public' . DS . 'uploads');
-                if($info){
-                    // 成功上传后 获取上传信息
-                    $filename= $info->getFilename(); 
-                    $filename=date('Ymd') . DS.$filename;
-                    //插入图片信息
-                    
-                    $arr['file']=$filename;
-                    $res=Db::name('project_file')->insert($arr);
-                }else{
-                    // 上传失败获取错误信息
-                    echo $file->getError();
-                }   
+            if($files){
+                foreach ($files as $file) {
+                    // 移动到框架应用根目录/public/uploads/ 目录下
+                    $info = $file->validate(['ext'=>'png,jpg,gif,doc,docx'])->move(ROOT_PATH . 'public' . DS . 'uploads');
+                    if($info){
+                        // 成功上传后 获取上传信息
+                        $filename= $info->getFilename(); 
+                        $filename=date('Ymd') . DS.$filename;
+                        //插入图片信息
+                        
+                        $arr['file']=$filename;
+                        $res=Db::name('project_file')->insert($arr);
+                    }else{
+                        // 上传失败获取错误信息
+                        echo $file->getError();
+                    }   
+                }
+            }else{
+                $this->error('请上传标签文件');
             }
             
             $this->success('操作成功','member/project/index');
@@ -116,6 +119,7 @@ class Project EXTENDS Member
         $project = $project->toArray();
         if(IS_POST){
             $result = $logic_project->edit($this->GET);
+            
             if(isset($result['state']) && $result['state'] == false){
                 $this->error($result['msg']);
             }

@@ -29,7 +29,7 @@ if($result_state == PROJECT_RESULT_STATE_REJECT){
   $post_url = url('member/project/edit');
 }
 ?>
-<form id="form1" name="form1" method="post" action="{$post_url}" onsubmit="return Dcheck();">
+<form id="form1" name="form1" method="post" action="{$post_url}" enctype="multipart/form-data" onsubmit="return Dcheck();">
 {if $result_state == PROJECT_RESULT_STATE_REJECT}
 <input name="op" type="hidden" value="reset" />
 <input name="diy_id" type="hidden" value="{$diy_id}" />
@@ -102,9 +102,14 @@ if($result_state == PROJECT_RESULT_STATE_REJECT){
     <th align="center">预警日期</th>
     <td align="left"><input type="text" name="project[remindtime]" id="remindtime" value="{$remindtime|default=''}" size="20" onFocus="WdatePicker({isShowClear:true,readOnly:true})" class="fc Wdate"></td>
   </tr>
-  <tr bgcolor="#ffffff">
+  <!-- <tr bgcolor="#ffffff">
     <th align="center">标签文件</th>
     <td align="left"><input name="project[bqfile]" type="text" id="bqfile" value="{$bqfile|default=''}" size="58"> <span onclick="upload_thumb('bqfile');" class="jt">[上传]</span>&nbsp;&nbsp;<span onclick="if(Dd('bqfile').value){Dd('showbqfile').src=Dd('bqfile').value;}" class="jt">[预览]</span>&nbsp;&nbsp;<span onclick="Dd('bqfile').value='';Dd('showbgfile').src='';" class="jt">[删除]</span><br><img src="" style="margin:2px;" id="showbqfile">
+    </td>
+  </tr> -->
+  <tr bgcolor="#ffffff">
+    <th align="center"><span class="highlight">*</span>标签文件</th>
+    <td align="left"><input type="file" name="fujian[]" multiple>(按住Ctrl键选中所有需要上传的附件，支持格式jpg|png|doc|docx|pdf)
     </td>
   </tr>
   <tr bgcolor="#ffffff">

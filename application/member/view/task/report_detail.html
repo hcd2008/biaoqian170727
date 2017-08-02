@@ -40,22 +40,28 @@
   .red{
     color: red;
   }
+  .myh3{
+    margin:5px auto;
+  }
 </style>
 <div class="title">
   <h2>标签评审-&gt;评审信息</h2></div>
 <div class="lieb_box">
+{if count($lists)}
     <div>总体意见：{if $ztres['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $ztres['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}</div>
    {volist name="lists" id="vo"}
       {if $vo['state']}
-        <div>word评审：上传附件<a href="/public/uploads/{$vo['rev_attach']}"><img src="__ASSETS__/image/xiazai.png" alt=""></a>
+        <h3>word评审</h3>
+        <div>上传附件<a href="/public/uploads/{$vo['rev_attach']}"><img src="__ASSETS__/image/xiazai.png" alt=""></a>
             评审结果：{if $vo['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $vo['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}
         </div>
       {else}
+        <h3 class='myh3'>图片评审</h3>
         <div id="tupian">
           <img width="100%" src="{$vo['rev_attach']}">
         </div>
         <div class="pingshen">
-          <p>评审结果：{if $vo['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $vo['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}</p>
+          <p>&nbsp;评审结果：{if $vo['rev_result_state']==20}<span class="green">审核通过</span>{/if}{if $vo['rev_result_state']==10}<span class="red">拒绝通过</span>{/if}</p>
           {foreach $vo['question'] as $t}
             <table class="biao">
               <tr>
@@ -94,7 +100,9 @@
       {/if}
    {/volist}
   
-  
+  {else}
+    未评审
+  {/if}
 </div>
 <script type="text/javascript">
 $('.email').addClass('curli');

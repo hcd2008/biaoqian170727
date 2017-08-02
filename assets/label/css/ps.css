@@ -137,3 +137,9 @@ body {
     text-decoration: none;
     color:green;
 }
+#shouqi{
+    float: left;
+    margin-top:50px;
+    cursor:pointer;
+    margin-right: 20px;
+}
